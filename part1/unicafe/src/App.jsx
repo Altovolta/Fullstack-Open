@@ -32,11 +32,11 @@ const App = () => {
 
   return (
     <div>
-      <h1>give feeddback</h1>
+      <h1>give feedback</h1>
       <Button handler={handleGood} text='good' />
       <Button handler={handleNeutral} text='neutral' />
       <Button handler={handleBad} text='bad' />
-      <h1>statics</h1>
+      <h1>statistics</h1>
       <p>
         good {good}
       </p>
