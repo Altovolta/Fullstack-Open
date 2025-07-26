@@ -9,6 +9,12 @@ const Button = ({handler, text}) => {
   )
 }
 
+const StatisticLine = ({value, text}) => (
+  <>
+    <p>{text} {value}</p>
+  </>
+)
+
 const Statistics = ({good, neutral, bad}) => {
 
   const total = good + bad + neutral
@@ -27,12 +33,12 @@ const Statistics = ({good, neutral, bad}) => {
 
   return (
     <>
-      <p> good {good} </p>
-      <p> neutral {neutral} </p>
-      <p> bad {bad} </p>
-      <p> All {total} </p>
-      <p> Average {average}</p>
-      <p> Positive {positive}% </p>
+      <StatisticLine text='good' value={good} />
+      <StatisticLine text='neutral' value={neutral} />
+      <StatisticLine text='bad' value={bad} />
+      <StatisticLine text='All' value={total} />
+      <StatisticLine text='Average' value={average} />
+      <StatisticLine text='Positive' value={positive.toString().concat(' %')} />
     </>
   )
 }
