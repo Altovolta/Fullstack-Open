@@ -6,6 +6,29 @@ const Button = ({handler, text}) => (
   </button>
 )
 
+const DisplayAnecdote = ({anecdotes, votes, index}) => (
+  <>
+    <p>
+      {anecdotes[index]}
+    </p>
+    <p>
+      has {votes[index]} votes
+    </p>
+  </>
+)
+
+const MaxVotesAnecdote = ({votes, anecdotes}) => {
+  const maxValue = Math.max(...votes);
+  const maxIndex = votes.indexOf(maxValue);
+
+  console.log('Max votes:', maxValue, '| index:', maxIndex)
+
+  return (
+      <DisplayAnecdote votes={votes} anecdotes={anecdotes} index={maxIndex} />
+  )
+  
+}
+
 const App = () => {
 
   const anecdotes = [
@@ -38,14 +61,13 @@ const App = () => {
 
   return (
     <div>
-      <p>
-        {anecdotes[selected]}
-      </p>
-      <p>
-        has {votes[selected]} votes
-      </p>
+      <h1> Anecdote of the day </h1>
+      <DisplayAnecdote votes={votes} anecdotes={anecdotes} index={selected} />
       <Button handler={handleVote} text='vote'/>
       <Button handler={handleNextAnecdote} text='next anecdote'/>
+
+      <h1> Anecdote with most votes</h1>
+      <MaxVotesAnecdote votes={votes} anecdotes={anecdotes}/>
     </div>
   )
 }
