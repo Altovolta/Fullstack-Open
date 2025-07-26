@@ -17,7 +17,7 @@ const DisplayAnecdote = ({anecdotes, votes, index}) => (
   </>
 )
 
-const MaxVotesAnecdote = ({votes, anecdotes}) => {
+const MostVotedAnecdote = ({votes, anecdotes}) => {
   const maxValue = Math.max(...votes);
   const maxIndex = votes.indexOf(maxValue);
 
@@ -67,7 +67,7 @@ const App = () => {
       <Button handler={handleNextAnecdote} text='next anecdote'/>
 
       <h1> Anecdote with most votes</h1>
-      <MaxVotesAnecdote votes={votes} anecdotes={anecdotes}/>
+      <MostVotedAnecdote votes={votes} anecdotes={anecdotes}/>
     </div>
   )
 }
