@@ -20,6 +20,8 @@ const App = () => {
   ]
 
   const [selected, setSelected] = useState(0)
+  const [votes, setVotes] = useState(Array(anecdotes.length).fill(0))
+
 
   const handleNextAnecdote = () => {
     const max = anecdotes.length
@@ -28,11 +30,21 @@ const App = () => {
     setSelected(randomInteger)
   }
 
+  const handleVote = () => {
+    const new_votes = [...votes]
+    new_votes[selected] += 1
+    setVotes(new_votes)
+  }
+
   return (
     <div>
       <p>
         {anecdotes[selected]}
       </p>
+      <p>
+        has {votes[selected]} votes
+      </p>
+      <Button handler={handleVote} text='vote'/>
       <Button handler={handleNextAnecdote} text='next anecdote'/>
     </div>
   )
