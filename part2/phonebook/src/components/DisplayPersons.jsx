@@ -1,9 +1,12 @@
 import Person from "./Person"
 
-const DisplayPersons = ({persons}) => {
+const DisplayPersons = ({persons, filterValue}) => {
+
+    const personsFiltered = persons.filter(person => person.name.includes(filterValue))
+
     return (
         <>
-        {persons.map((person, index) => <Person key={index} name={person.name} phone={person.phone}/>)}
+        {personsFiltered.map((person, index) => <Person key={index} name={person.name} phone={person.phone}/>)}
         </>
     )
 }

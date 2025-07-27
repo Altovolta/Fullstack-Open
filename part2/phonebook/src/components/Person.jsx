@@ -1,5 +1,7 @@
-const Person = ({name, phone}) => (
-    <p>{name} {phone}</p>
-)
+const Person = ({name, phone}) => {
+    return (
+        <p>{name} {phone}</p>
+    )
+}
 
 export default Person
