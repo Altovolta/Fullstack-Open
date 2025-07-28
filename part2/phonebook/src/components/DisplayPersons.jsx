@@ -6,7 +6,7 @@ const DisplayPersons = ({persons, filterValue}) => {
 
     return (
         <>
-        {personsFiltered.map((person, index) => <Person key={index} name={person.name} phone={person.phone}/>)}
+        {personsFiltered.map((person, index) => <Person key={index} name={person.name} phone={person.number}/>)}
         </>
     )
 }
