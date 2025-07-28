@@ -28,7 +28,7 @@ const App = () => {
       return
     }
 
-    const newPerson = {name: newName, number: newPhone}
+    const newPerson = {id: persons.length+1 , name: newName, number: newPhone}
     setPersons(persons.concat(newPerson))
     setNewName('')
     setNewPhone('')
