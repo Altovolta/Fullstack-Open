@@ -32,18 +32,29 @@ const App = () => {
   const handleSubmition = (event) => {
     event.preventDefault()
     
-    const personFound = persons.some(person => person.name === newName)
-    if (personFound) {
-      alert(`${newName} is already added to phonebook`)
-      return
+    const searchedPerson = persons.find(person => person.name === newName)
+
+    const shouldUpdate = searchedPerson 
+    ? confirm(`${searchedPerson.name} is already added to phonebook, replace the old number with a new one?`) 
+    : false;
+
+        
+    if (searchedPerson && shouldUpdate) {
+      const updatedPerson = {...searchedPerson, number: newPhone}
+
+      personService.update(searchedPerson.id, updatedPerson)
+      .then( updatedPerson => {
+        setPersons(persons.map( person => person.id !== searchedPerson.id ? person : updatedPerson))
+      })
+
+    } else {
+      const newPersonInfo = {name: newName, number: newPhone}
+
+      personService.create(newPersonInfo)
+      .then(person => {
+        setPersons(persons.concat(person))
+      })
     }
-
-    const newPersonInfo = {name: newName, number: newPhone}
-
-    personService.create(newPersonInfo)
-    .then(person => {
-      setPersons(persons.concat(person))
-    })
 
     setNewName('')
     setNewPhone('')
