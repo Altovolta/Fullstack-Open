@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 import personService from './services/persons'
 
 import PersonForm from './components/PersonForm'
-import DisplayPersons from './components/DisplayPersons'
+import Persons from './components/Persons'
 import Filter from './components/Filter'
 
 const App = () => {
@@ -61,7 +61,7 @@ const App = () => {
       <PersonForm newName={newName} newPhone={newPhone} 
       handleNameChange={handleNameChange} handlePhoneChange={handlePhoneChange} handleSubmition={handleSubmition}/>
       <h2>Numbers</h2>
-      <DisplayPersons persons={persons} filterValue={filter}/>
+      <Persons persons={persons} filterValue={filter}/>
     </div>
   )
 }
