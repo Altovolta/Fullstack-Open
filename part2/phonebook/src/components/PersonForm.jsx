@@ -10,7 +10,7 @@ const PersonForm = (props) => {
           </div>
           <div>
             <button type="submit">add</button>
-        </div>
+          </div>
       </form>
     )
 }

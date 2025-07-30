@@ -20,6 +20,15 @@ const App = () => {
 
   const handleFilter  = (event) => setFilter(event.target.value)
   
+  const handleDeletion = (id, name) => {
+
+    if (confirm(`Delete ${name}?`)) {
+      personService.remove(id).then( response => {
+        setPersons(persons.filter(person => person.id != id))
+      })
+    }
+  }
+
   const handleSubmition = (event) => {
     event.preventDefault()
     
@@ -61,7 +70,7 @@ const App = () => {
       <PersonForm newName={newName} newPhone={newPhone} 
       handleNameChange={handleNameChange} handlePhoneChange={handlePhoneChange} handleSubmition={handleSubmition}/>
       <h2>Numbers</h2>
-      <Persons persons={persons} filterValue={filter}/>
+      <Persons persons={persons} filterValue={filter} deletionHandler={handleDeletion}/>
     </div>
   )
 }
