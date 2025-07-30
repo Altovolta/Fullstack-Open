@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
+
+import personService from './services/persons'
 
 import PersonForm from './components/PersonForm'
 import DisplayPersons from './components/DisplayPersons'
@@ -30,10 +31,9 @@ const App = () => {
 
     const newPersonInfo = {name: newName, number: newPhone}
 
-    axios.post('http://localhost:3001/persons', newPersonInfo)
-    .then(response => {
-      const newPerson = response.data
-      setPersons(persons.concat(newPerson))
+    personService.create(newPersonInfo)
+    .then(person => {
+      setPersons(persons.concat(person))
     })
 
     setNewName('')
@@ -42,15 +42,13 @@ const App = () => {
   } 
 
   useEffect( () => {
-    const uri = 'http://localhost:3001/persons'
 
     console.log("Obtaining persons...")
 
-    axios.get(uri).then( response => {
-      console.log("Obtained response. Status:", response.status)
-      console.log("Data:", response.data)
+    personService.getAll().then( response => {
+      console.log("Data:", response)
 
-    setPersons(response.data)
+    setPersons(response)
 
     })
   }, [])
