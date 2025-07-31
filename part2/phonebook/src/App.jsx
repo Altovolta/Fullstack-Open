@@ -15,7 +15,8 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newPhone, setNewPhone] = useState('')
   const [filter, setFilter] = useState('')
-  const [successMessage, setSuccessMessage] = useState(null)
+  const [message, setMessage] = useState(null)
+  const [isError, setIsError] = useState(false)
 
 
   const handleNameChange = (event) => setNewName(event.target.value)
@@ -49,9 +50,12 @@ const App = () => {
       personService.update(searchedPerson.id, updatedPerson)
       .then( updatedPerson => {
         setPersons(persons.map( person => person.id !== searchedPerson.id ? person : updatedPerson))
+        setMessage(`${updatedPerson.name} phone number has been updated`)
+      }).catch( error => {
+        setMessage(`Information of ${updatedPerson.name} has already been removed from server`)
+        setPersons(persons.filter(person => person.id != updatedPerson.id))
+        setIsError(true)
       })
-
-      setSuccessMessage(`${updatedPerson.name} phone number has been updated`)
 
     } else {
       const newPersonInfo = {name: newName, number: newPhone}
@@ -59,13 +63,13 @@ const App = () => {
       personService.create(newPersonInfo)
       .then(person => {
         setPersons(persons.concat(person))
-      })
-
-      setSuccessMessage(`Added ${newPersonInfo.name} `)    
+        setMessage(`Added ${newPersonInfo.name} `)  
+      })   
     }
 
     setTimeout(() => {          
-      setSuccessMessage(null)        
+      setMessage(null)   
+      setIsError(false)     
       }, 5000)    
 
     setNewName('')
@@ -87,7 +91,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={successMessage}/>
+      <Notification message={message} isError={isError}/>
       <Filter filter={filter} handler={handleFilter} />
       <h2>add a new</h2>
       <PersonForm newName={newName} newPhone={newPhone} 
