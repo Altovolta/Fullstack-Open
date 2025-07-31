@@ -1,6 +1,19 @@
 import Country from "./Country"
 
-const Countries = ({countries, filter}) => {
+const DisplayCountryInList = ({country, handleShowCountry}) => {
+
+    return (
+        <li>
+            {country.name.common}
+            <button onClick={() => handleShowCountry(country.name.common)}>
+                Show
+            </button>
+        </li>
+    )
+    
+}
+
+const Countries = ({countries, filter, handleShowCountry}) => {
 
     const filteredCountries = countries.filter(country => 
         country.name.common.toLowerCase().includes(filter.toLowerCase())
@@ -19,9 +32,7 @@ const Countries = ({countries, filter}) => {
         return (
             <p>
                 {filteredCountries.map(country => 
-                    <li key={country.cca2}>
-                        {country.name.common}
-                    </li>
+                <DisplayCountryInList key={country.cca2} country={country} handleShowCountry={handleShowCountry}/>
                 )}
             </p>
         )

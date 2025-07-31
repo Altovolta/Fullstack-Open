@@ -20,10 +20,14 @@ function App() {
     setFilter(event.target.value)
   }
 
+  const handleShowCountry = (name) => {
+    setFilter(name)
+  }
+
   return(
     <div>
       find countries <input value={filter} onChange={handleChange}></input>
-      <Countries countries={countries} filter={filter}/>
+      <Countries countries={countries} filter={filter} handleShowCountry={handleShowCountry}/>
     </div>
   )
 }
