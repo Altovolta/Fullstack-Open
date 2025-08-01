@@ -13,7 +13,7 @@ const DisplayCountryInList = ({country, handleShowCountry}) => {
     
 }
 
-const Countries = ({countries, filter, handleShowCountry}) => {
+const Countries = ({countries, filter, handleShowCountry, weather}) => {
 
     const filteredCountries = countries.filter(country => 
         country.name.common.toLowerCase().includes(filter.toLowerCase())
@@ -38,7 +38,7 @@ const Countries = ({countries, filter, handleShowCountry}) => {
         )
     }  
      else {
-        return <Country country={filteredCountries[0]}/>
+        return <Country country={filteredCountries[0]} weather={weather}/>
     }
 } 
 

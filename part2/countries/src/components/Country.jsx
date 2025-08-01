@@ -1,3 +1,5 @@
+import Weather from "./Weather"
+
 const CountryInformation = ({country}) => {
     return (
         <>  
@@ -31,7 +33,10 @@ const Languages = ({langs}) => {
     )
 }
 
-const Country = ({country}) => {
+const Country = ({country, weather}) => {
+
+    if (!weather) return null
+    
     return (
         <>
             <h1>{country.name.common}</h1>
@@ -39,6 +44,7 @@ const Country = ({country}) => {
             <h2>Languages</h2>
             <Languages langs={country.languages}/>
             <img src={country.flags.png} alt={country.flags.alt}/>
+            <Weather city={country.capital[0]} weather={weather}/>
         </>
 
     )
