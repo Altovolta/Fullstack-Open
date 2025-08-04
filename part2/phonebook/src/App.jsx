@@ -17,8 +17,6 @@ const App = () => {
   const [filter, setFilter] = useState('')
 
   const [notification, setNotification] = useState({message: null, isError: false})
-  // const [message, setMessage] = useState(null)
-  // const [isError, setIsError] = useState(false)
 
 
   const handleNameChange = (event) => setNewName(event.target.value)
@@ -41,13 +39,10 @@ const App = () => {
       personService.update(updatedPersonData.id, updatedPersonData)
       .then( updatedPerson => {
         setPersons(persons.map( person => person.id !== updatedPersonData.id ? person : updatedPerson))
-        //setMessage(`${updatedPerson.name} phone number has been updated`)
         setNotification({message: `${updatedPerson.name} phone number has been updated`, isError: false})
       }).catch( error => {
-        // setMessage(`Information of ${updatedPerson.name} has already been removed from server`)
         setNotification({message: `Information of ${updatedPerson.name} has already been removed from server`, isError: true})
         setPersons(persons.filter(person => person.id != updatedPerson.id))
-        // setIsError(true)
       })
   }
 
@@ -72,15 +67,14 @@ const App = () => {
       personService.create(newPersonInfo)
       .then(person => {
         setPersons(persons.concat(person))
-        setNotification({message: `Added ${newPersonInfo.name}`, isError: false})
-        // setMessage(`Added ${newPersonInfo.name} `)  
+        setNotification({message: `Added ${newPersonInfo.name}`, isError: false}) 
+      }).catch(error => {
+        setNotification({message: error.response.data.error, isError: true})
       })   
     }
 
     setTimeout(() => {    
-      setNotification({message: null, isError: false})      
-      // setMessage(null)   
-      // setIsError(false)     
+      setNotification({message: null, isError: false})         
       }, 5000)    
 
     setNewName('')
