@@ -34,6 +34,19 @@ const App = () => {
     }
   }
 
+  const handleUpdate = (updatedPersonData) => {
+  
+      personService.update(updatedPersonData.id, updatedPersonData)
+      .then( updatedPerson => {
+        setPersons(persons.map( person => person.id !== updatedPersonData.id ? person : updatedPerson))
+        setMessage(`${updatedPerson.name} phone number has been updated`)
+      }).catch( error => {
+        setMessage(`Information of ${updatedPerson.name} has already been removed from server`)
+        setPersons(persons.filter(person => person.id != updatedPerson.id))
+        setIsError(true)
+      })
+  }
+
   const handleSubmition = (event) => {
     event.preventDefault()
     
@@ -47,15 +60,7 @@ const App = () => {
     if (searchedPerson && shouldUpdate) {
       const updatedPerson = {...searchedPerson, number: newPhone}
 
-      personService.update(searchedPerson.id, updatedPerson)
-      .then( updatedPerson => {
-        setPersons(persons.map( person => person.id !== searchedPerson.id ? person : updatedPerson))
-        setMessage(`${updatedPerson.name} phone number has been updated`)
-      }).catch( error => {
-        setMessage(`Information of ${updatedPerson.name} has already been removed from server`)
-        setPersons(persons.filter(person => person.id != updatedPerson.id))
-        setIsError(true)
-      })
+      handleUpdate(updatedPerson)
 
     } else {
       const newPersonInfo = {name: newName, number: newPhone}
