@@ -15,8 +15,10 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newPhone, setNewPhone] = useState('')
   const [filter, setFilter] = useState('')
-  const [message, setMessage] = useState(null)
-  const [isError, setIsError] = useState(false)
+
+  const [notification, setNotification] = useState({message: null, isError: false})
+  // const [message, setMessage] = useState(null)
+  // const [isError, setIsError] = useState(false)
 
 
   const handleNameChange = (event) => setNewName(event.target.value)
@@ -39,11 +41,13 @@ const App = () => {
       personService.update(updatedPersonData.id, updatedPersonData)
       .then( updatedPerson => {
         setPersons(persons.map( person => person.id !== updatedPersonData.id ? person : updatedPerson))
-        setMessage(`${updatedPerson.name} phone number has been updated`)
+        //setMessage(`${updatedPerson.name} phone number has been updated`)
+        setNotification({message: `${updatedPerson.name} phone number has been updated`, isError: false})
       }).catch( error => {
-        setMessage(`Information of ${updatedPerson.name} has already been removed from server`)
+        // setMessage(`Information of ${updatedPerson.name} has already been removed from server`)
+        setNotification({message: `Information of ${updatedPerson.name} has already been removed from server`, isError: true})
         setPersons(persons.filter(person => person.id != updatedPerson.id))
-        setIsError(true)
+        // setIsError(true)
       })
   }
 
@@ -68,13 +72,15 @@ const App = () => {
       personService.create(newPersonInfo)
       .then(person => {
         setPersons(persons.concat(person))
-        setMessage(`Added ${newPersonInfo.name} `)  
+        setNotification({message: `Added ${newPersonInfo.name}`, isError: false})
+        // setMessage(`Added ${newPersonInfo.name} `)  
       })   
     }
 
-    setTimeout(() => {          
-      setMessage(null)   
-      setIsError(false)     
+    setTimeout(() => {    
+      setNotification({message: null, isError: false})      
+      // setMessage(null)   
+      // setIsError(false)     
       }, 5000)    
 
     setNewName('')
@@ -96,7 +102,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={message} isError={isError}/>
+      <Notification notification={notification}/>
       <Filter filter={filter} handler={handleFilter} />
       <h2>add a new</h2>
       <PersonForm newName={newName} newPhone={newPhone} 
