@@ -33,7 +33,7 @@ describe ('blog api', () => {
         assert(response.body[0].id)
     })
 
-    test('creating a valid note increases total amount of blogs', async () => {
+    test('creating a valid blog increases total amount of blogs', async () => {
 
         await api.post('/api/blogs')
             .send(helper.newBlog)
@@ -45,7 +45,7 @@ describe ('blog api', () => {
 
     })
 
-    test('creating a note saves it correctly', async () => {
+    test('creating a blog saves it correctly', async () => {
 
         await api.post('/api/blogs').send(helper.newBlog)
 
@@ -53,6 +53,23 @@ describe ('blog api', () => {
 
         const titles = blogs.map(blog => blog.title)
         assert(titles.includes(helper.newBlog.title))
+
+    })
+
+    test('creating a blog without likes ... ', async () => {
+
+        const newBlog = {
+            title: 'No likes',
+            author: 'Unlucky',
+            url: 'https://no-likes.com/',
+        }
+
+        const response = await api
+            .post('/api/blogs')
+            .send(newBlog)
+            .expect(201)
+
+        assert.strictEqual(response.body.likes, 0)
 
     })
 })
