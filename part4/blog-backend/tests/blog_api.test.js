@@ -28,6 +28,11 @@ describe ('blog api', () => {
         assert.strictEqual(response.body.length, helper.initialBlogs.length)
     })
 
+    test('blogs are identified by id field', async () => {
+        const response = await api.get('/api/blogs')
+        assert(response.body[0].id)
+    })
+
 })
 
 after(async () => {
