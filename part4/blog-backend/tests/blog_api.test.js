@@ -17,13 +17,13 @@ beforeEach(async () => {
 
 describe ('blog api', () => {
 
-    test('GET returned content is json', async () => {
+    test('blogs can be viewed returned content is json', async () => {
         await api.get('/api/blogs')
             .expect(200)
             .expect('Content-Type', /application\/json/)
     })
 
-    test('GET returns all blogs', async () => {
+    test('all blogs can be viewed', async () => {
         const response = await api.get('/api/blogs')
         assert.strictEqual(response.body.length, helper.initialBlogs.length)
     })
@@ -33,6 +33,28 @@ describe ('blog api', () => {
         assert(response.body[0].id)
     })
 
+    test('creating a valid note increases total amount of blogs', async () => {
+
+        await api.post('/api/blogs')
+            .send(helper.newBlog)
+            .expect(201)
+            .expect('Content-Type', /application\/json/)
+
+        const blogs = await helper.getBlogs()
+        assert.strictEqual(blogs.length, helper.initialBlogs.length + 1)
+
+    })
+
+    test('creating a note saves it correctly', async () => {
+
+        await api.post('/api/blogs').send(helper.newBlog)
+
+        const blogs = await helper.getBlogs()
+
+        const titles = blogs.map(blog => blog.title)
+        assert(titles.includes(helper.newBlog.title))
+
+    })
 })
 
 after(async () => {
