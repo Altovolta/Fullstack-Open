@@ -73,7 +73,7 @@ describe ('blog api', () => {
 
     })
 
-    test('creating a blog without title returns status code 400  ', async () => {
+    test('creating a blog without title returns status code 400', async () => {
 
         const newBlog = {
             author: 'Unlucky',
@@ -86,7 +86,7 @@ describe ('blog api', () => {
             .expect(400)
     })
 
-    test('creating a blog without url returns status code 400  ', async () => {
+    test('creating a blog without url returns status code 400', async () => {
 
         const newBlog = {
             title: 'No likes',
@@ -98,6 +98,35 @@ describe ('blog api', () => {
             .send(newBlog)
             .expect(400)
     })
+
+    test('deleting a blog reduce the number of notes ', async () => {
+        const initialBlogs = await helper.getBlogs()
+        const blogToDelete = initialBlogs[0]
+
+        await api
+            .delete(`/api/blogs/${blogToDelete.id}`)
+            .expect(204)
+
+        const blogs = await helper.getBlogs()
+        assert.strictEqual(blogs.length, initialBlogs.length - 1)
+
+    })
+
+    test('deleting a blog that removes the blog', async () => {
+        const initialBlogs = await helper.getBlogs()
+        const blogToDelete = initialBlogs[0]
+
+        await api
+            .delete(`/api/blogs/${blogToDelete.id}`)
+            .expect(204)
+
+        const blogs = await helper.getBlogs()
+
+        const titles = blogs.map(blog => blog.title)
+        assert(!titles.includes(blogToDelete.title))
+
+    })
+
 })
 
 after(async () => {
