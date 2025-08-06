@@ -12,6 +12,11 @@ const unknownEndpoint = (request, response) => {
 }
 
 const errorHandler = (error, request, response) => {
+
+    if (error.name === 'ValidationError') {
+        return response.status(400).send({ error: error.message })
+    }
+
     logger.error(error.message)
     response.status(500).send({ error: 'something went wrong' })
 }
