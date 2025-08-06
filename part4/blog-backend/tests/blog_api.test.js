@@ -127,6 +127,37 @@ describe ('blog api', () => {
 
     })
 
+
+    test('updating a blog amount of likes, changes its likes', async () => {
+        const likes = 50
+        const initialBlogs = await helper.getBlogs()
+        const blogToUpdate = initialBlogs[0]
+
+        const updatedBlogData = { ...blogToUpdate, likes: likes }
+
+        await api
+            .put(`/api/blogs/${blogToUpdate.id}`)
+            .send(updatedBlogData)
+            .expect(200)
+
+        const blogs = await helper.getBlogs()
+        const updatedBlog = blogs.filter(blog => blog.title === blogToUpdate.title)
+        assert.strictEqual(updatedBlog[0].likes, likes)
+
+    })
+
+    test('updating a blog with negative amount of likes fails', async () => {
+        const initialBlogs = await helper.getBlogs()
+        const blogToUpdate = initialBlogs[0]
+
+        const updatedBlogData = { ...blogToUpdate, likes: -5 }
+
+        await api
+            .put(`/api/blogs/${blogToUpdate.id}`)
+            .send(updatedBlogData)
+            .expect(400)
+
+    })
 })
 
 after(async () => {

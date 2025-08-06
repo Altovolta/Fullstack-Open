@@ -19,4 +19,19 @@ blogRouter.delete('/:id', async (request, response) => {
     response.status(204).end()
 })
 
+blogRouter.put('/:id', async (request, response) => {
+
+    const blogToUpdate = await Blog.findById(request.params.id)
+    if (!blogToUpdate) {
+        response.status(404).send({ error: 'this blog does not exist' })
+    } else {
+
+        blogToUpdate.likes = request.body.likes
+
+        const updatedBlog = await blogToUpdate.save()
+
+        response.json(updatedBlog)
+    }
+})
+
 module.exports = blogRouter
