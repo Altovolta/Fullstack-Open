@@ -56,7 +56,7 @@ describe ('blog api', () => {
 
     })
 
-    test('creating a blog without likes ... ', async () => {
+    test('creating a blog without likes returns 0 likes ', async () => {
 
         const newBlog = {
             title: 'No likes',
@@ -71,6 +71,32 @@ describe ('blog api', () => {
 
         assert.strictEqual(response.body.likes, 0)
 
+    })
+
+    test('creating a blog without title returns status code 400  ', async () => {
+
+        const newBlog = {
+            author: 'Unlucky',
+            url: 'https://no-likes.com/',
+        }
+
+        await api
+            .post('/api/blogs')
+            .send(newBlog)
+            .expect(400)
+    })
+
+    test('creating a blog without url returns status code 400  ', async () => {
+
+        const newBlog = {
+            title: 'No likes',
+            author: 'Unlucky',
+        }
+
+        await api
+            .post('/api/blogs')
+            .send(newBlog)
+            .expect(400)
     })
 })
 

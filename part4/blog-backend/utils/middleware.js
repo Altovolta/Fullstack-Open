@@ -11,7 +11,7 @@ const unknownEndpoint = (request, response) => {
     response.status(404).send({ error: 'unknown endpoint' })
 }
 
-const errorHandler = (error, request, response) => {
+const errorHandler = (error, request, response, next) => {
 
     if (error.name === 'ValidationError') {
         return response.status(400).send({ error: error.message })
@@ -19,6 +19,7 @@ const errorHandler = (error, request, response) => {
 
     logger.error(error.message)
     response.status(500).send({ error: 'something went wrong' })
+    next()
 }
 
 module.exports = {
