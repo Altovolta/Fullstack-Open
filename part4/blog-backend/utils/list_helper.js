@@ -21,7 +21,6 @@ const mostBlogs = (blogs) => {
 
     if (blogs.length === 0) return null
 
-
     const authorBlogsCount = lodash.countBy(blogs, 'author')
     const mostBlogs = lodash.reduce(authorBlogsCount, (result, count, author) => {
         return count >= result.blogs ? { author, blogs: count } : result
@@ -30,9 +29,26 @@ const mostBlogs = (blogs) => {
     return mostBlogs
 }
 
+const mostLikes = (blogs) => {
+
+    if (blogs.length === 0) return null
+
+    const likesPerAuthor = lodash.reduce(blogs, (result, blog) => {
+        result[blog.author] = (result[blog.author] || 0) + blog.likes
+        return result
+    }, {})
+
+    const mostLikedAuthor = lodash.reduce(likesPerAuthor, (result, likes, author) => {
+        return likes >= result.likes ? { author, likes } : result
+    }, { author: null, likes: 0 })
+
+    return mostLikedAuthor
+}
+
 module.exports = {
     dummy,
     totalLikes,
     favouriteBlog,
-    mostBlogs
+    mostBlogs,
+    mostLikes
 }

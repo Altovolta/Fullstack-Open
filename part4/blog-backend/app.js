@@ -11,8 +11,8 @@ logger.info('Connecting to MongoDB...')
 
 const mongoUrl = config.MONGODB_URI || 'mongodb://localhost:27017/blogs'
 mongoose.connect(mongoUrl)
-  .then(() => logger.info('Connected to MongoDB'))
-  .catch(() => logger.error('Error connecting to MongoDB:'))
+    .then(() => logger.info('Connected to MongoDB'))
+    .catch(() => logger.error('Error connecting to MongoDB:'))
 
 app.use(express.json())
 app.use(middleware.requestLogger)
