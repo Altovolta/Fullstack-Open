@@ -55,6 +55,99 @@ describe ('when there is one user in db', () => {
         assert(usernames.includes(newUser.username))
     })
 
+    test('user with non unique username can not be created', async () => {
+
+        const initialUsers = await helper.getUsers()
+        const newUser = {
+            username: 'Roberto',
+            name: 'Pedro',
+            password: 'HolaMundo15'
+        }
+
+        const result = await api.post('/api/users')
+            .send(newUser)
+            .expect(400)
+            .expect('Content-Type', /application\/json/)
+
+        assert(result.body.error.includes('The username already exists'))
+
+        const endUsers = await helper.getUsers()
+        assert.strictEqual(endUsers.length, initialUsers.length)
+    })
+
+
+    test('user with username smaller then 3 chars is not created', async () => {
+
+        const initialUsers = await helper.getUsers()
+        const newUser = {
+            username: 'Ro',
+            name: 'Roman',
+            password: 'Hola'
+        }
+
+        await api.post('/api/users')
+            .send(newUser)
+            .expect(400)
+            .expect('Content-Type', /application\/json/)
+
+        const endUsers = await helper.getUsers()
+
+        assert.strictEqual(endUsers.length, initialUsers.length)
+    })
+
+    test('user with no username is not created', async () => {
+
+        const initialUsers = await helper.getUsers()
+        const newUser = {
+            name: 'Roman',
+            password: 'Hola'
+        }
+
+        await api.post('/api/users')
+            .send(newUser)
+            .expect(400)
+            .expect('Content-Type', /application\/json/)
+
+        const endUsers = await helper.getUsers()
+
+        assert.strictEqual(endUsers.length, initialUsers.length)
+    })
+
+    test('user with no password is not created', async () => {
+
+        const initialUsers = await helper.getUsers()
+        const newUser = {
+            username: 'Pepito',
+            name: 'Roman',
+        }
+
+        await api.post('/api/users')
+            .send(newUser)
+            .expect(400)
+            .expect('Content-Type', /application\/json/)
+
+        const endUsers = await helper.getUsers()
+
+        assert.strictEqual(endUsers.length, initialUsers.length)
+    })
+
+    test('user with password shorter than 3 chars is not created', async () => {
+
+        const initialUsers = await helper.getUsers()
+        const newUser = {
+            username: 'Pepito',
+            name: 'Roman',
+        }
+
+        await api.post('/api/users')
+            .send(newUser)
+            .expect(400)
+            .expect('Content-Type', /application\/json/)
+
+        const endUsers = await helper.getUsers()
+
+        assert.strictEqual(endUsers.length, initialUsers.length)
+    })
 })
 
 after(async () => {

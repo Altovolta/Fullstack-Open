@@ -1,6 +1,7 @@
 const Blog = require('../models/blog')
 const User = require('../models/user')
 
+// Blogs
 const initialBlogs =  [
     {
         title: 'React patterns',
