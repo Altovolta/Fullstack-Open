@@ -1,8 +1,6 @@
-const jwt = require('jsonwebtoken')
-const config = require('../utils/config')
 const blogRouter = require('express').Router()
 const Blog = require('../models/blog')
-const User = require('../models/user')
+
 
 blogRouter.get('/', async (request, response) => {
     const blogs = await Blog.find({}).populate('user')
@@ -12,14 +10,8 @@ blogRouter.get('/', async (request, response) => {
 
 blogRouter.post('/', async (request, response) => {
 
-    const decodedToken = jwt.verify(request.token, config.SECRET)
-    if (!decodedToken.id) {
-        return response.status(401).json({ error: 'invalid token' })
-    }
-
-    const user = await User.findById(decodedToken.id)
-    if (!user) {
-        return response.status(400).json({ error: 'invalid UserId' })
+    if (!request.user) {
+        return response.status(401).send({ error: 'invalid user' })
     }
 
     const blog = new Blog({
@@ -27,30 +19,24 @@ blogRouter.post('/', async (request, response) => {
         author: request.body.author,
         url: request.body.url,
         likes: request.body.likes,
-        user: user.id
+        user: request.user.id
     })
 
     const savedBlog = await blog.save()
-    user.blogs = user.blogs.concat(savedBlog._id)
-    await user.save()
+    request.user.blogs = request.user.blogs.concat(savedBlog._id)
+    await request.user.save()
 
     response.status(201).json(savedBlog)
 })
 
 blogRouter.delete('/:id', async (request, response) => {
 
-    const decodedToken = jwt.verify(request.token, config.SECRET)
-    if (!decodedToken.id) {
-        return response.status(401).json({ error: 'invalid token' })
-    }
-
-    const tokenUser = await User.findById(decodedToken.id)
     const blog = await Blog.findById(request.params.id)
-    if (!tokenUser || !blog) {
-        return response.status(400).json({ error: 'invalid UserId or blogId' })
+    if (!request.user || !blog) {
+        return response.status(400).json({ error: 'invalid user or blogId' })
     }
 
-    if (blog.user.toString() !== tokenUser.id.toString()) {
+    if (blog.user.toString() !== request.user.id.toString()) {
         return response.status(401).json({ error: 'user is not the blog creator' })
     }
 
