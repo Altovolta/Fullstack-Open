@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import Notification from './components/Notification'
+import BlogForm from './components/BlogForm'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
@@ -64,17 +65,16 @@ const App = () => {
     
   }
 
-  const clearNewBlog = () => {
-    setTitle('')
-    setAuthor('')
-    setUrl('')
-  }
-
-
   const handleLogout = () => {
     window.localStorage.removeItem('blogUser')
     setUser(null)
     blogService.setToken('')
+  }
+
+  const clearNewBlog = () => {
+    setTitle('')
+    setAuthor('')
+    setUrl('')
   }
 
   const handleNewBlog = async (event) => {
@@ -128,41 +128,6 @@ const App = () => {
     )
   }
 
-  const blogForm = () => {
-
-    return (
-      <div>
-        <form onSubmit={handleNewBlog}>
-          <div>
-            title  
-            <input 
-            type='text' 
-            value={title} 
-            onChange={({target}) => setTitle(target.value)}
-            name='Title'/>
-          </div>
-          <div>
-            author  
-            <input 
-            type='text' 
-            value={author} 
-            onChange={({target}) => setAuthor(target.value)}
-            name='Author'/>
-          </div>
-          <div>
-            url  
-            <input 
-            type='text' 
-            value={url} 
-            onChange={({target}) => setUrl(target.value)}
-            name='Url'/>
-          </div>
-          <button type='submit'>create</button>
-        </form>
-      </div>
-    )
-  }
-
   if (user === null) {
     return (
       <div>
@@ -182,7 +147,15 @@ const App = () => {
       </p>
       <h3>Create new</h3>
       <div>
-        {blogForm()}
+        <BlogForm 
+        handleNewBlog={handleNewBlog}
+        title={title}
+        setTitle={setTitle}
+        author={author}
+        setAuthor={setAuthor}
+        url={url}
+        setUrl={setUrl}
+        />
       </div>
       <br/>
       {blogs.map(blog =>
