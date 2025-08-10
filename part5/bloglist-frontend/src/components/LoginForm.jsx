@@ -1,14 +1,27 @@
+import { useState } from "react"
+
 const LoginForm = ({
-    handleLogin,
-    username,
-    setUsername,
-    password,
-    setPassword
+    onLogin,
 }) => {
+
+    const [username, setUsername] = useState('')
+    const [password, setPassword] = useState('')
+
+    const clearLogin = () => {
+        setUsername('')
+        setPassword('')
+    }
+
+    const onSubmit = async (event) => {
+        event.preventDefault()
+        await onLogin({username, password})
+        clearLogin() 
+    }
+
     return(
       <>
         <h2>Log in</h2>
-        <form onSubmit={handleLogin}>
+        <form onSubmit={onSubmit}>
           <div>
             username  
             <input 
