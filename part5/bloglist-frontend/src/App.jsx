@@ -10,10 +10,6 @@ const App = () => {
   const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
 
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
-
   const [notification, setNotification] = useState({message: null, isError: false})
 
   useEffect(() => {
@@ -63,14 +59,8 @@ const App = () => {
     blogService.setToken('')
   }
 
-  const clearNewBlog = () => {
-    setTitle('')
-    setAuthor('')
-    setUrl('')
-  }
+  const onNewBlog = async ({title, author, url}) => {
 
-  const handleNewBlog = async (event) => {
-    event.preventDefault()
     try {
       const newBlog = await blogService.create({
         title, 
@@ -83,8 +73,6 @@ const App = () => {
         message: `A new blog '${newBlog.title}' by ${newBlog.author} added`, 
         isError:false
       })
-
-      clearNewBlog()
       
     } catch(err) {
       setNotification({message: err.response.data.error, isError:true})
@@ -93,7 +81,7 @@ const App = () => {
     setNotificarionTimeout()
   }
 
-
+  
   if (user === null) {
     return (
       <div>
@@ -113,15 +101,7 @@ const App = () => {
       </p>
       <h3>Create new</h3>
       <div>
-        <BlogForm 
-        handleNewBlog={handleNewBlog}
-        title={title}
-        setTitle={setTitle}
-        author={author}
-        setAuthor={setAuthor}
-        url={url}
-        setUrl={setUrl}
-        />
+        <BlogForm onNewBlog={onNewBlog}/>
       </div>
       <br/>
       {blogs.map(blog =>
