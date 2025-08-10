@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
+import Notification from './components/Notification'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
@@ -12,6 +13,8 @@ const App = () => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
+
+  const [notification, setNotification] = useState({message: null, isError: false})
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -28,20 +31,45 @@ const App = () => {
     }
   }, [])
 
-  const handleLogin = async (event) => {
-    event.preventDefault()
+  const setNotificarionTimeout = () => {
+    setTimeout(()=> {
+      setNotification({message: null, isError:false})
+    }, 5000)
+  }
 
-    const userResponse = await loginService.login({
-      username, 
-      password
-    })
-
-    window.localStorage.setItem('blogUser', JSON.stringify(userResponse))
-    blogService.setToken(userResponse.token)
-    setUser(userResponse)
+  const clearLogin = () => {
     setUsername('')
     setPassword('')
   }
+
+  const handleLogin = async (event) => {
+    event.preventDefault()
+
+    try {
+      const userResponse = await loginService.login({
+        username, 
+        password
+      })
+
+      window.localStorage.setItem('blogUser', JSON.stringify(userResponse))
+      blogService.setToken(userResponse.token)
+      setUser(userResponse)
+      clearLogin()
+
+    } catch(err) {
+      setNotification({message: err.response.data.error, isError:true})
+    }
+
+    setNotificarionTimeout()
+    
+  }
+
+  const clearNewBlog = () => {
+    setTitle('')
+    setAuthor('')
+    setUrl('')
+  }
+
 
   const handleLogout = () => {
     window.localStorage.removeItem('blogUser')
@@ -51,19 +79,26 @@ const App = () => {
 
   const handleNewBlog = async (event) => {
     event.preventDefault()
+    try {
+      const newBlog = await blogService.create({
+        title, 
+        author, 
+        url
+      })
 
-    const newBlog = await blogService.create({
-      title, 
-      author, 
-      url
-    })
+      setBlogs(blogs.concat(newBlog))
+      setNotification({
+        message: `A new blog '${newBlog.title}' by ${newBlog.author} added`, 
+        isError:false
+      })
 
-    setBlogs(blogs.concat(newBlog))
+      clearNewBlog()
+      
+    } catch(err) {
+      setNotification({message: err.response.data.error, isError:true})
+    }
 
-    setTitle('')
-    setAuthor('')
-    setUrl('')
-
+    setNotificarionTimeout()
   }
 
   const loginForm = () => {
@@ -131,6 +166,7 @@ const App = () => {
   if (user === null) {
     return (
       <div>
+        <Notification notification={notification} />
         {loginForm()}
       </div>
     )
@@ -139,6 +175,7 @@ const App = () => {
   return (
     <div>
       <h2>blogs</h2>
+      <Notification notification={notification} />
       <p>
         {user.name} logged in
         <button onClick={() => handleLogout()}>logout</button>
