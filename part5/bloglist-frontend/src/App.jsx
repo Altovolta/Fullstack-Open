@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import Notification from './components/Notification'
+import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
 import blogService from './services/blogs'
 import loginService from './services/login'
@@ -101,38 +102,18 @@ const App = () => {
     setNotificarionTimeout()
   }
 
-  const loginForm = () => {
-    return(
-      <>
-        <h2>Log in</h2>
-        <form onSubmit={handleLogin}>
-          <div>
-            username  
-            <input 
-            type='text' 
-            value={username} 
-            onChange={({target}) => setUsername(target.value)}
-            name='Username'/>
-          </div>
-          <div>
-            password 
-            <input 
-            type='password' 
-            value={password} 
-            onChange={({target}) => setPassword(target.value)}
-            name='Password'/>
-          </div>
-          <button type='submit'>Login</button>
-        </form>
-      </>
-    )
-  }
 
   if (user === null) {
     return (
       <div>
         <Notification notification={notification} />
-        {loginForm()}
+        <LoginForm 
+        handleLogin={handleLogin}
+        username={username}
+        setUsername={setUsername}
+        password={password}
+        setPassword={setPassword}
+        />
       </div>
     )
   }
