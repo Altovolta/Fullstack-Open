@@ -88,7 +88,7 @@ const App = () => {
   const blogFormRef = useRef()
   const blogForm = () => {
     return (
-      <Togglable buttonLabel="new blog" ref={blogFormRef}>
+      <Togglable buttonLabel="create new blog" ref={blogFormRef}>
         <BlogForm onNewBlog={onNewBlog}/>
       </Togglable>
     )
