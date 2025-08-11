@@ -22,6 +22,7 @@ const BlogForm = ({
 
     return (
       <div>
+        <h3>Create new</h3>
         <form onSubmit={onSubmit}>
           <div>
             title: {' '} 
