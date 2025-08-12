@@ -23,13 +23,17 @@ const create = ({title, author, url}) => {
   return request.then(response => response.data)
 }
 
+const remove = ({id}) => {
+  const config = {
+    headers: { Authorization: token },
+  }
+
+  const request = axios.delete(`${baseUrl}/${id}`, config)
+  return request.then(response => response.data)
+}
+
 const update = ({
-  id,
-  user,
-  likes,
-  author,
-  title,
-  url
+  id, user, likes, author, title, url
 }) => {
 
   const request = axios.put(
@@ -40,4 +44,4 @@ const update = ({
   return request.then(response => response.data)
 }
 
-export default { getAll, setToken, create, update }
+export default { getAll, setToken, create, update, remove }

@@ -101,6 +101,33 @@ const App = () => {
     } catch(err) {
       setNotification({message: err.response.data.error, isError:true})
     }
+
+    setNotificarionTimeout()
+
+  }
+
+  const removeBlog = async (blogToRemove) => {
+
+    const shouldDelete = window.confirm(`Remove blog '${blogToRemove.title}' by ${blogToRemove.author}`)
+
+    if (shouldDelete) {
+      try {
+        await blogService.remove({id: blogToRemove.id})
+
+        const filteredBlogs = blogs.filter(blog => blog.id !== blogToRemove.id)
+        setBlogs(filteredBlogs)
+
+        setNotification({
+          message: `Blog '${blogToRemove.title}' deleted`, 
+          isError: false
+        })
+
+      } catch(err) {
+        setNotification({message: err.response.data.error, isError:true})
+      }
+
+      setNotificarionTimeout()
+    }
   }
   
   const blogFormRef = useRef()
@@ -133,7 +160,7 @@ const App = () => {
       {blogForm()}
       <br/>
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} onLike={onLike}/>
+        <Blog key={blog.id} blog={blog} onLike={onLike} removeBlog={removeBlog}/>
       )}
     </div>
   )
