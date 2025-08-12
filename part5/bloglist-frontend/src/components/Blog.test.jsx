@@ -40,4 +40,21 @@ describe('<Blog />', () => {
     const blogDetails = container.querySelector('.blogDetails')
     expect(blogDetails).toHaveStyle('display: none')
   })
+
+  test('after clicking the button, display blog details', async () => {
+
+    const onLike = vi.fn()
+    const removeBlog = vi.fn()
+
+    const { container } = render(<Blog blog={blog} onLike={onLike} removeBlog={removeBlog} />)
+
+    const user = userEvent.setup()
+    const button = screen.getByText('view')
+    await user.click(button)
+
+    const blogDetails = container.querySelector('.blogDetails')
+    expect(blogDetails).not.toHaveStyle('display: none')
+    expect(blogDetails).toHaveTextContent('http://ficcion-botges.com')
+    expect(blogDetails).toHaveTextContent('likes 15')
+  })
 })
