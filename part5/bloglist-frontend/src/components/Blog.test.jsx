@@ -57,4 +57,19 @@ describe('<Blog />', () => {
     expect(blogDetails).toHaveTextContent('http://ficcion-botges.com')
     expect(blogDetails).toHaveTextContent('likes 15')
   })
+
+  test('after clicking the like button twice, the handler is called 2 times', async () => {
+
+    const onLike = vi.fn()
+    const removeBlog = vi.fn()
+
+    const { container } = render(<Blog blog={blog} onLike={onLike} removeBlog={removeBlog} />)
+
+    const user = userEvent.setup()
+    const likeButton = screen.getByText('like')
+    await user.click(likeButton)
+    await user.click(likeButton)
+
+    expect(onLike.mock.calls).toHaveLength(2)
+  })
 })
