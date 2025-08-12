@@ -15,8 +15,11 @@ const App = () => {
   const [notification, setNotification] = useState({message: null, isError: false})
 
   useEffect(() => {
-    blogService.getAll().then(blogs =>
+    blogService.getAll().then(blogs => {
+      blogs.sort((blog1, blog2) => blog2.likes - blog1.likes)
       setBlogs( blogs )
+    }
+      
     )  
   }, [])
 
@@ -92,6 +95,7 @@ const App = () => {
     try {
       const updatedBlog = await blogService.update(updatedBlogInfo) 
       const updatedBlogs = blogs.map(blog => blog.id === updatedBlog.id ? updatedBlog: blog)
+      updatedBlogs.sort((blog1, blog2) => blog2.likes - blog1.likes)
       setBlogs(updatedBlogs)
 
     } catch(err) {
