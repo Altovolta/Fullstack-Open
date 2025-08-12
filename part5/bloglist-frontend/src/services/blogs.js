@@ -23,4 +23,21 @@ const create = ({title, author, url}) => {
   return request.then(response => response.data)
 }
 
-export default { getAll, setToken, create }
+const update = ({
+  id,
+  user,
+  likes,
+  author,
+  title,
+  url
+}) => {
+
+  const request = axios.put(
+    `${baseUrl}/${id}`, 
+    {user: user.id, likes, author, title, url}
+  )
+
+  return request.then(response => response.data)
+}
+
+export default { getAll, setToken, create, update }

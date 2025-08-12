@@ -84,7 +84,22 @@ const App = () => {
 
     setNotificarionTimeout()
   }
+  
+  const onLike = async (blog) => {
 
+    const updatedBlogInfo = {...blog, likes: blog.likes + 1}
+
+    try {
+      const updatedBlog = await blogService.update(updatedBlogInfo) 
+      const updatedBlogs = blogs.map(blog => blog.id === updatedBlog.id ? updatedBlog: blog)
+      setBlogs(updatedBlogs)
+
+    } catch(err) {
+      console.log(err)
+      setNotification({message: err.response.data.error, isError:true})
+    }
+  }
+  
   const blogFormRef = useRef()
   const blogForm = () => {
     return (
@@ -93,6 +108,7 @@ const App = () => {
       </Togglable>
     )
   }
+  
 
   if (user === null) {
     return (
@@ -114,7 +130,7 @@ const App = () => {
       {blogForm()}
       <br/>
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} onLike={onLike}/>
       )}
     </div>
   )
