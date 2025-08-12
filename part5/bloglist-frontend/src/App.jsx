@@ -95,7 +95,6 @@ const App = () => {
       setBlogs(updatedBlogs)
 
     } catch(err) {
-      console.log(err)
       setNotification({message: err.response.data.error, isError:true})
     }
   }
