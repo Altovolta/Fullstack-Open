@@ -1,5 +1,5 @@
-import { useState } from "react"
-
+import { useState } from 'react'
+import PropTypes from 'prop-types'
 
 const Blog = ({ blog, onLike, removeBlog }) => {
 
@@ -32,7 +32,7 @@ const Blog = ({ blog, onLike, removeBlog }) => {
         <div>{blog.user.name}</div>
         <div>
           <button onClick={() => removeBlog(blog)}>remove</button>
-      </div>
+        </div>
       </>
     )
   }
@@ -46,9 +46,24 @@ const Blog = ({ blog, onLike, removeBlog }) => {
       <div style={showWhenVisible}>
         {blogDetails()}
       </div>
-    </div>  
+    </div>
   )
 }
-  
+
+Blog.propTypes = {
+  onLike: PropTypes.func.isRequired,
+  removeBlog: PropTypes.func.isRequired,
+  blog: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    author: PropTypes.string.isRequired,
+    likes: PropTypes.number.isRequired,
+    user: PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      name: PropTypes.string.isRequired,
+      username: PropTypes.string.isRequired,
+    })
+  })
+}
 
 export default Blog

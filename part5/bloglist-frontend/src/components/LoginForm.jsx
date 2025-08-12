@@ -1,47 +1,53 @@
-import { useState } from "react"
+import { useState } from 'react'
+import PropTypes from 'prop-types'
+
 
 const LoginForm = ({
-    onLogin,
+  onLogin,
 }) => {
 
-    const [username, setUsername] = useState('')
-    const [password, setPassword] = useState('')
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
 
-    const clearLogin = () => {
-        setUsername('')
-        setPassword('')
-    }
+  const clearLogin = () => {
+    setUsername('')
+    setPassword('')
+  }
 
-    const onSubmit = async (event) => {
-        event.preventDefault()
-        await onLogin({username, password})
-        clearLogin() 
-    }
+  const onSubmit = async (event) => {
+    event.preventDefault()
+    await onLogin({ username, password })
+    clearLogin()
+  }
 
-    return(
-      <>
-        <h2>Log in</h2>
-        <form onSubmit={onSubmit}>
-          <div>
-            username  
-            <input 
-            type='text' 
-            value={username} 
-            onChange={({target}) => setUsername(target.value)}
+  return(
+    <>
+      <h2>Log in</h2>
+      <form onSubmit={onSubmit}>
+        <div>
+          username
+          <input
+            type='text'
+            value={username}
+            onChange={({ target }) => setUsername(target.value)}
             name='Username'/>
-          </div>
-          <div>
-            password 
-            <input 
-            type='password' 
-            value={password} 
-            onChange={({target}) => setPassword(target.value)}
+        </div>
+        <div>
+          password
+          <input
+            type='password'
+            value={password}
+            onChange={({ target }) => setPassword(target.value)}
             name='Password'/>
-          </div>
-          <button type='submit'>Login</button>
-        </form>
-      </>
-    )
+        </div>
+        <button type='submit'>Login</button>
+      </form>
+    </>
+  )
+}
+
+LoginForm.propTypes = {
+  onLogin: PropTypes.func.isRequired,
 }
 
 export default LoginForm

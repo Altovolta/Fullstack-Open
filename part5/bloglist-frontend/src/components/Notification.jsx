@@ -1,24 +1,35 @@
-const Notification = ({notification}) => {
+import PropTypes from 'prop-types'
 
-    if (notification.message === null) return null 
+const Notification = ({ notification }) => {
 
-    const color = notification.isError ? 'red' : 'green'
-    const style = {
-        color: color,
-        background: 'lightgrey',
-        fontSize: '20px',
-        borderStyle: 'solid',
-        borderRadius: '2px',
-        padding: '10px',
-        marginBottom: '10px',
-        fontWeight: 'bold',
-    }
+  if (notification.message === null) return null
 
-    return (
-        <div style={style}>
-            {notification.message}
-        </div>
-    )
+  const color = notification.isError ? 'red' : 'green'
+  const style = {
+    color: color,
+    background: 'lightgrey',
+    fontSize: '20px',
+    borderStyle: 'solid',
+    borderRadius: '2px',
+    padding: '10px',
+    marginBottom: '10px',
+    fontWeight: 'bold',
+  }
+
+  return (
+    <div style={style}>
+      {notification.message}
+    </div>
+  )
 }
+
+Notification.propTypes = {
+  notification: PropTypes.shape({
+    message: PropTypes.string,
+    isError: PropTypes.bool.isRequired
+  })
+}
+
+
 
 export default Notification

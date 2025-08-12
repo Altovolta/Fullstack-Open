@@ -12,18 +12,18 @@ const setToken = (newToken) => {
   token = `Bearer ${newToken}`
 }
 
-const create = ({title, author, url}) => {
+const create = ({ title, author, url }) => {
   const config = {
     headers: { Authorization: token },
   }
 
-  const request = axios.post(baseUrl, 
-    {title, author, url}, config
+  const request = axios.post(baseUrl,
+    { title, author, url }, config
   )
   return request.then(response => response.data)
 }
 
-const remove = ({id}) => {
+const remove = ({ id }) => {
   const config = {
     headers: { Authorization: token },
   }
@@ -37,8 +37,8 @@ const update = ({
 }) => {
 
   const request = axios.put(
-    `${baseUrl}/${id}`, 
-    {user: user.id, likes, author, title, url}
+    `${baseUrl}/${id}`,
+    { user: user.id, likes, author, title, url }
   )
 
   return request.then(response => response.data)
