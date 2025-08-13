@@ -25,7 +25,7 @@ const Blog = ({ blog, onLike, removeBlog }) => {
     return(
       <>
         <a href="url">{blog.url}</a>
-        <div>
+        <div data-testid='blogLikes'>
           likes {blog.likes}
           <button onClick={() => onLike(blog)}>like</button>
         </div>

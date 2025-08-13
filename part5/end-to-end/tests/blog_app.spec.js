@@ -44,17 +44,24 @@ describe('Blog app', () => {
     })
 
     test('a new blog can be created', async ({ page }) => {
-      await page.getByRole('button', {name: 'create new blog'}).click()
-      await page.getByTestId('titleInput').fill('un titulo')
-      await page.getByTestId('authorInput').fill('un autor')
-      await page.getByTestId('urlInput').fill('http://url.com')
-      await page.getByRole('button', {name: 'create'}).click()
+      await helper.createBlogWith(page, 'un titulo', 'un autor', 'http://url.com')
 
       const notificationDiv = page.locator('.notification')
       await expect(notificationDiv).toContainText("A new blog 'un titulo' by un autor added")
       await expect(notificationDiv).toHaveCSS('border-style', 'solid')
       await expect(notificationDiv).toHaveCSS('color', 'rgb(0, 128, 0)')
+    })
 
+    describe('and a blog exists', () => {
+      beforeEach(async ({ page }) => {
+        await helper.createBlogWith(page, 'un titulo', 'un autor', 'http://url.com')
+      })
+
+      test('it can be liked', async ({ page }) => {
+        await page.getByRole('button', { name: 'view' }).click()
+        await page.getByRole('button', { name: 'like' }).click()
+        await expect(page.getByTestId('blogLikes')).toContainText('likes 1')
+      })
     })
 })
 })
