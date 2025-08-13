@@ -34,6 +34,7 @@ const BlogForm = ({
             onChange={({ target }) => setTitle(target.value)}
             name='Title'
             id='title-input'
+            data-testid='titleInput'
           />
         </div>
         <div>
@@ -44,6 +45,7 @@ const BlogForm = ({
             onChange={({ target }) => setAuthor(target.value)}
             name='Author'
             id='author-input'
+            data-testid='authorInput'
           />
         </div>
         <div>
@@ -54,6 +56,7 @@ const BlogForm = ({
             onChange={({ target }) => setUrl(target.value)}
             name='Url'
             id='url-input'
+            data-testid='urlInput'
           />
         </div>
         <div>

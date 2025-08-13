@@ -11,7 +11,7 @@ describe('Blog app', () => {
         password: 'securePass'
       }
     })
-    
+
     await page.goto('/')
   })
 
@@ -37,4 +37,24 @@ describe('Blog app', () => {
       await expect(notificationDiv).toHaveCSS('color', 'rgb(255, 0, 0)')
     })
   })
+
+  describe('When logged in', () => {
+    beforeEach(async ({ page }) => {
+      helper.loginWith(page, 'Pepito', 'securePass')
+    })
+
+    test('a new blog can be created', async ({ page }) => {
+      await page.getByRole('button', {name: 'create new blog'}).click()
+      await page.getByTestId('titleInput').fill('un titulo')
+      await page.getByTestId('authorInput').fill('un autor')
+      await page.getByTestId('urlInput').fill('http://url.com')
+      await page.getByRole('button', {name: 'create'}).click()
+
+      const notificationDiv = page.locator('.notification')
+      await expect(notificationDiv).toContainText("A new blog 'un titulo' by un autor added")
+      await expect(notificationDiv).toHaveCSS('border-style', 'solid')
+      await expect(notificationDiv).toHaveCSS('color', 'rgb(0, 128, 0)')
+
+    })
+})
 })
