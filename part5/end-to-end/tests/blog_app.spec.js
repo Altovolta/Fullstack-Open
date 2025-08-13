@@ -62,6 +62,19 @@ describe('Blog app', () => {
         await page.getByRole('button', { name: 'like' }).click()
         await expect(page.getByTestId('blogLikes')).toContainText('likes 1')
       })
+
+      test('it can be deleted by the user that created it', async ({ page }) => {
+
+        page.on('dialog', async (dialog) => await dialog.accept())
+
+        await page.getByRole('button', { name: 'view' }).click()
+        await page.getByRole('button', { name: 'remove' }).click()
+
+        const notificationDiv = page.locator('.notification')
+        await expect(notificationDiv).toContainText("Blog 'un titulo' deleted")
+        await expect(notificationDiv).toHaveCSS('border-style', 'solid')
+        await expect(notificationDiv).toHaveCSS('color', 'rgb(0, 128, 0)')
+      })
     })
 })
 })
