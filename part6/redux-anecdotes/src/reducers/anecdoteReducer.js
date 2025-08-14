@@ -25,13 +25,19 @@ const reducer = (state = initialState, action) => {
   switch (action.type) {
     case 'VOTE': {
       const id = action.payload.id
-      const oldNote = state.find(note => note.id === id)
+      const oldAnecdote = state.find(note => note.id === id)
 
-      const updatedNote = {
-        ...oldNote, 
-        votes: oldNote.votes + 1
+      const updatedAnecdote = {
+        ...oldAnecdote, 
+        votes: oldAnecdote.votes + 1
       }
-      return state.map(note => note.id !== id ? note : updatedNote)
+      
+      const newState = state.map(anecdote => 
+        anecdote.id !== id ? anecdote : updatedAnecdote
+      )
+
+      newState.sort((an1, an2) => an2.votes - an1.votes)
+      return newState
     }
     case "CREATE":
       return [...state, action.payload]
