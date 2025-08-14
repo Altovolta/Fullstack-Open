@@ -1,11 +1,12 @@
 import { useState } from 'react'
 import PropTypes from 'prop-types'
 
-const Blog = ({ blog, onLike, removeBlog }) => {
+const Blog = ({ blog, onLike, removeBlog, currentUser }) => {
 
   const [visible, setVisible] = useState(false)
 
   const showWhenVisible = { display: visible ? '' : 'none' }
+  const userIsOwner = { display: (blog.user.username === currentUser.username) ? '' : 'none' }
 
   const blogStyle = {
     paddingTop: 5,
@@ -30,7 +31,7 @@ const Blog = ({ blog, onLike, removeBlog }) => {
           <button onClick={() => onLike(blog)}>like</button>
         </div>
         <div>{blog.user.name}</div>
-        <div>
+        <div style={userIsOwner}>
           <button onClick={() => removeBlog(blog)}>remove</button>
         </div>
       </>

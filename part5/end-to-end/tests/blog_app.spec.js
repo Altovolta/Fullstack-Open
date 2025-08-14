@@ -12,6 +12,14 @@ describe('Blog app', () => {
       }
     })
 
+    await request.post('/api/users', {
+      data : {
+        name: 'Ronaldo Nazario',
+        username: 'Ronaldo',
+        password: 'securePass2'
+      }
+    })
+
     await page.goto('/')
   })
 
@@ -64,7 +72,6 @@ describe('Blog app', () => {
       })
 
       test('it can be deleted by the user that created it', async ({ page }) => {
-
         page.on('dialog', async (dialog) => await dialog.accept())
 
         await page.getByRole('button', { name: 'view' }).click()
@@ -75,6 +82,16 @@ describe('Blog app', () => {
         await expect(notificationDiv).toHaveCSS('border-style', 'solid')
         await expect(notificationDiv).toHaveCSS('color', 'rgb(0, 128, 0)')
       })
+
+
+      test('it cannot be deleted by a user that did not create it', async ({ page }) => {
+        await page.getByRole('button', { name: 'logout' }).click()
+        await helper.loginWith(page, 'Ronaldo', 'securePass2')
+
+        await page.getByRole('button', { name: 'view' }).click()
+        expect(page.getByRole('button', { name: 'remove' })).not.toBeVisible()
+      })
+      
     })
 })
 })
