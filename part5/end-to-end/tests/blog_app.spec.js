@@ -93,5 +93,33 @@ describe('Blog app', () => {
       })
       
     })
-})
+
+    describe('and multiple blogs with likes exist', () => {
+      beforeEach(async ({ page }) => {
+        await helper.createBlogWith(page, 'un titulo', 'un autor', 'http://url.com')
+        await helper.createBlogWith(page, 'otro titulo', 'otro autor', 'http://url2.com')
+        await helper.createBlogWith(page, 'uno mas', 'lorem ipsum', 'http://url3.com')
+        
+        await helper.likeBlogWith(page, 'un titulo', 'un autor', 0)
+        await helper.likeBlogWith(page, 'otro titulo', 'otro autor', 2)
+        await helper.likeBlogWith(page, 'uno mas', 'lorem ipsum', 1)
+        
+      })
+
+      test('blogs are sorted by amount of likes', async ({ page }) => {
+        const likesLocators = await page.locator('.blogDiv')
+        .filter({hasText: 'likes'}).all()
+
+        const likes = []
+        for (const likeElement of likesLocators) {
+          const text = await likeElement.getByText('likes').textContent()
+          const textNum = text.replace(/[^0-9]+/g, "");
+          likes.push(parseInt(textNum))  
+        }
+        
+        const sortedLikes = [...likes].sort((blog1Likes, blog2Likes) => blog2Likes - blog1Likes)
+        expect(likes).toEqual(sortedLikes)
+      })
+    })
+  })
 })

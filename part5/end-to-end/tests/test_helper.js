@@ -12,7 +12,18 @@ const createBlogWith = async (page, title, author, url) => {
     await page.getByTestId('urlInput').fill(url)
     await page.getByRole('button', {name: 'create'}).click()
 
-    await page.locator('.blogDiv').waitFor()
+    await page.getByText(`${title} - ${author}`).waitFor()
+        
 }
 
-export { loginWith, createBlogWith }
+const likeBlogWith = async (page, title, author, likes) =>{
+
+    const locator = await page.getByText(`${title} - ${author}`)
+    await locator.getByRole('button', {name: 'view'}).click()
+    for (let i = 1; i <= likes; i++) {
+        await locator.getByRole('button', { name: 'like' }).click()
+        await locator.getByText(`likes ${i}`).waitFor()
+    } 
+}
+
+export { loginWith, createBlogWith, likeBlogWith }
