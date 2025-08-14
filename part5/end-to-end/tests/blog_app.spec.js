@@ -119,6 +119,12 @@ describe('Blog app', () => {
         
         const sortedLikes = [...likes].sort((blog1Likes, blog2Likes) => blog2Likes - blog1Likes)
         expect(likes).toEqual(sortedLikes)
+
+        // Alternativa a todo este quilombo (no hacia falta ver el num de likes):
+        // const blogs = await page.locator('.blogDiv').all()
+        // expect(blogs[0]).toHaveText('un titulo')
+        // expect(blogs[1]).toHaveText('otro titulo')
+        // expect(blogs[2]).toHaveText('uno mas')
       })
     })
   })
