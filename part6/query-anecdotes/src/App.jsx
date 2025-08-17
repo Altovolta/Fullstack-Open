@@ -3,6 +3,7 @@ import Notification from './components/Notification'
 import anecdotesService from './services/anecdote'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useNotificationDispatch } from './hooks/useNotification'
+import { createNotification } from './utils/notification'
 
 const App = () => {
 
@@ -23,10 +24,10 @@ const App = () => {
         anecdote.id === updatedAnecdote.id ? updatedAnecdote : anecdote
       )
       queryClient.setQueryData(['anecdotes'], updatedAnecdotes)
-      notificationDispatch({
-        type:"NEW", payload: `anecdote '${updatedAnecdote.content}' voted`
-      })
-      setTimeout(() => notificationDispatch({type:"REMOVE"}), 5000)
+      createNotification(notificationDispatch, `anecdote '${updatedAnecdote.content}' voted`)
+    },
+    onError: (error) => {
+      createNotification(notificationDispatch, error.response.data.error)
     }
   })
 
