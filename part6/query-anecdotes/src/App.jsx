@@ -2,7 +2,7 @@ import AnecdoteForm from './components/AnecdoteForm'
 import Notification from './components/Notification'
 import anecdotesService from './services/anecdote'
 
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useMutation } from '@tanstack/react-query'
 
 const App = () => {
 
@@ -11,8 +11,6 @@ const App = () => {
     queryFn: anecdotesService.getAll,
     retry: 1
   })
-
-  console.log(JSON.parse(JSON.stringify(result)))
 
   if (result.isPending) {
     return(
