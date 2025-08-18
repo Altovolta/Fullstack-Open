@@ -1,27 +1,11 @@
 import { useState } from 'react'
-import { 
-  BrowserRouter as Router,
-  Link, Route, Routes
- } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
 
 import AnecdoteList from './components/AnecdoteList'
 import About from './components/About'
 import Footer from './components/Footer'
 import AnecdoteForm from './components/AnecdoteForm'
-
-
-const Menu = () => {
-  const padding = {
-    paddingRight: 5
-  }
-  return (
-    <div>
-      <a href='#' style={padding}>anecdotes</a>
-      <a href='#' style={padding}>create new</a>
-      <a href='#' style={padding}>about</a>
-    </div>
-  )
-}
+import Menu from './components/Menu'
 
 
 const App = () => {
@@ -67,9 +51,12 @@ const App = () => {
     <div>
       <h1>Software anecdotes</h1>
       <Menu />
-      <AnecdoteList anecdotes={anecdotes} />
-      <About />
-      <AnecdoteForm addNew={addNew} />
+      <Routes>
+        <Route path='/anecdotes' element={ <AnecdoteList anecdotes={anecdotes} />} />
+        <Route path='/create' element={ <AnecdoteForm addNew={addNew} />} />
+        <Route path='/about' element={ <About />} />
+        <Route path='/' element={ <AnecdoteList anecdotes={anecdotes} />} />
+      </Routes>
       <Footer />
     </div>
   )
