@@ -2,11 +2,12 @@ import { useState } from 'react'
 import PropTypes from 'prop-types'
 
 const Blog = ({ blog, onLike, removeBlog, currentUser }) => {
-
   const [visible, setVisible] = useState(false)
 
   const showWhenVisible = { display: visible ? '' : 'none' }
-  const userIsOwner = { display: (blog.user.username === currentUser.username) ? '' : 'none' }
+  const userIsOwner = {
+    display: blog.user.username === currentUser.username ? '' : 'none',
+  }
 
   const blogStyle = {
     paddingTop: 5,
@@ -15,7 +16,7 @@ const Blog = ({ blog, onLike, removeBlog, currentUser }) => {
     border: 'solid',
     borderWidth: 3,
     marginBottom: 7,
-    borderColor: '#4000ff'
+    borderColor: '#4000ff',
   }
 
   const changeVisibility = () => {
@@ -23,10 +24,10 @@ const Blog = ({ blog, onLike, removeBlog, currentUser }) => {
   }
 
   const blogDetails = () => {
-    return(
+    return (
       <>
         <a href="url">{blog.url}</a>
-        <div data-testid='blogLikes'>
+        <div data-testid="blogLikes">
           likes {blog.likes}
           <button onClick={() => onLike(blog)}>like</button>
         </div>
@@ -39,12 +40,10 @@ const Blog = ({ blog, onLike, removeBlog, currentUser }) => {
   }
 
   return (
-    <div style={blogStyle} className='blogDiv'>
-      {blog.title} - {blog.author} {' '}
-      <button onClick={changeVisibility}>
-        {visible ? 'hide' : 'view'}
-      </button>
-      <div style={showWhenVisible} className='blogDetails'>
+    <div style={blogStyle} className="blogDiv">
+      {blog.title} - {blog.author}{' '}
+      <button onClick={changeVisibility}>{visible ? 'hide' : 'view'}</button>
+      <div style={showWhenVisible} className="blogDetails">
         {blogDetails()}
       </div>
     </div>
@@ -63,8 +62,8 @@ Blog.propTypes = {
       id: PropTypes.string.isRequired,
       name: PropTypes.string.isRequired,
       username: PropTypes.string.isRequired,
-    })
-  })
+    }),
+  }),
 }
 
 export default Blog

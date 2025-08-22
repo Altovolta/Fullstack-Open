@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types'
 
 const Notification = ({ notification }) => {
-
   if (notification.message === null) return null
 
   const color = notification.isError ? 'red' : 'green'
@@ -17,7 +16,7 @@ const Notification = ({ notification }) => {
   }
 
   return (
-    <div style={style} className='notification'>
+    <div style={style} className="notification">
       {notification.message}
     </div>
   )
@@ -26,10 +25,8 @@ const Notification = ({ notification }) => {
 Notification.propTypes = {
   notification: PropTypes.shape({
     message: PropTypes.string,
-    isError: PropTypes.bool.isRequired
-  })
+    isError: PropTypes.bool.isRequired,
+  }),
 }
-
-
 
 export default Notification

@@ -4,11 +4,10 @@ import BlogForm from './BlogForm'
 
 describe('<Blog />', () => {
   test('displays author and title by default', async () => {
-
     const onNewBlog = vi.fn()
     const user = userEvent.setup()
 
-    const { container } = render(<BlogForm onNewBlog={onNewBlog}/>)
+    const { container } = render(<BlogForm onNewBlog={onNewBlog} />)
 
     const titleInput = container.querySelector('#title-input')
     await user.type(titleInput, 'title')
@@ -27,5 +26,4 @@ describe('<Blog />', () => {
     expect(onNewBlog.mock.calls[0][0].author).toBe('author')
     expect(onNewBlog.mock.calls[0][0].url).toBe('http://url.com')
   })
-
 })

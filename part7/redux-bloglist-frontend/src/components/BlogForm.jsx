@@ -1,11 +1,7 @@
 import { useState } from 'react'
 import PropTypes from 'prop-types'
 
-
-const BlogForm = ({
-  onNewBlog,
-}) => {
-
+const BlogForm = ({ onNewBlog }) => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
@@ -23,46 +19,45 @@ const BlogForm = ({
   }
 
   return (
-    <div className='blogForm'>
+    <div className="blogForm">
       <h3>Create new</h3>
       <form onSubmit={onSubmit}>
         <div>
-          title: {' '}
+          title:{' '}
           <input
-            type='text'
+            type="text"
             value={title}
             onChange={({ target }) => setTitle(target.value)}
-            name='Title'
-            id='title-input'
-            data-testid='titleInput'
+            name="Title"
+            id="title-input"
+            data-testid="titleInput"
           />
         </div>
         <div>
           author:{' '}
           <input
-            type='text'
+            type="text"
             value={author}
             onChange={({ target }) => setAuthor(target.value)}
-            name='Author'
-            id='author-input'
-            data-testid='authorInput'
+            name="Author"
+            id="author-input"
+            data-testid="authorInput"
           />
         </div>
         <div>
-          url: {' '}
+          url:{' '}
           <input
-            type='text'
+            type="text"
             value={url}
             onChange={({ target }) => setUrl(target.value)}
-            name='Url'
-            id='url-input'
-            data-testid='urlInput'
+            name="Url"
+            id="url-input"
+            data-testid="urlInput"
           />
         </div>
         <div>
-          <button type='submit'>create</button>
+          <button type="submit">create</button>
         </div>
-
       </form>
     </div>
   )
