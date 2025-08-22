@@ -8,17 +8,19 @@ import blogService from './services/blogs'
 import loginService from './services/login'
 
 import { setNotification } from './reducers/notificationReducer'
+import { initBlogs } from './reducers/blogReducer'
+import { useSelector, useDispatch } from 'react-redux'
 
 const App = () => {
-  const [blogs, setBlogs] = useState([])
+  const dispatch = useDispatch()
+  const blogs = useSelector((state) => state.blogs)
+
+  const [_, setBlogs] = useState([])
   const [user, setUser] = useState(null)
 
   useEffect(() => {
-    blogService.getAll().then((blogs) => {
-      blogs.sort((blog1, blog2) => blog2.likes - blog1.likes)
-      setBlogs(blogs)
-    })
-  }, [])
+    dispatch(initBlogs())
+  }, [dispatch])
 
   useEffect(() => {
     const userItem = window.localStorage.getItem('blogUser')
@@ -40,7 +42,12 @@ const App = () => {
       blogService.setToken(userResponse.token)
       setUser(userResponse)
     } catch (err) {
-      setNotification({ message: err.response.data.error, isError: true }, 5000)
+      dispatch(
+        setNotification(
+          { message: err.response.data.error, isError: true },
+          5000
+        )
+      )
     }
   }
 
@@ -59,17 +66,24 @@ const App = () => {
       })
 
       setBlogs(blogs.concat(newBlog))
-      setNotification(
-        {
-          message: `A new blog '${newBlog.title}' by ${newBlog.author} added`,
-          isError: false,
-        },
-        5000
+      dispatch(
+        setNotification(
+          {
+            message: `A new blog '${newBlog.title}' by ${newBlog.author} added`,
+            isError: false,
+          },
+          5000
+        )
       )
 
       blogFormRef.current.toggleVisibility()
     } catch (err) {
-      setNotification({ message: err.response.data.error, isError: true }, 5000)
+      dispatch(
+        setNotification(
+          { message: err.response.data.error, isError: true },
+          5000
+        )
+      )
     }
   }
 
@@ -84,7 +98,12 @@ const App = () => {
       updatedBlogs.sort((blog1, blog2) => blog2.likes - blog1.likes)
       setBlogs(updatedBlogs)
     } catch (err) {
-      setNotification({ message: err.response.data.error, isError: true }, 5000)
+      dispatch(
+        setNotification(
+          { message: err.response.data.error, isError: true },
+          5000
+        )
+      )
     }
   }
 
@@ -102,17 +121,21 @@ const App = () => {
         )
         setBlogs(filteredBlogs)
 
-        setNotification(
-          {
-            message: `Blog '${blogToRemove.title}' deleted`,
-            isError: false,
-          },
-          5000
+        dispatch(
+          setNotification(
+            {
+              message: `Blog '${blogToRemove.title}' deleted`,
+              isError: false,
+            },
+            5000
+          )
         )
       } catch (err) {
-        setNotification(
-          { message: err.response.data.error, isError: true },
-          5000
+        dispatch(
+          setNotification(
+            { message: err.response.data.error, isError: true },
+            5000
+          )
         )
       }
     }
