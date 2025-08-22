@@ -60,7 +60,7 @@ const App = () => {
       {blogForm()}
       <br />
       {blogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} currentUser={user} />
+        <Blog key={blog.id} blog={blog} />
       ))}
     </div>
   )
