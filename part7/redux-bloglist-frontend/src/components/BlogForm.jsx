@@ -18,29 +18,10 @@ const BlogForm = () => {
   }
 
   const onSubmit = async (event) => {
-    // TODO: inprove error handling. Add toggle when created
+    // TODO: Add toggle when created
     event.preventDefault()
-    try {
-      await dispatch(createBlog({ title, author, url })).unwrap()
-      clearBlogForm()
-
-      dispatch(
-        setNotification(
-          {
-            message: `A new blog '${title}' by ${author} added`,
-            isError: false,
-          },
-          5000
-        )
-      )
-    } catch (err) {
-      dispatch(
-        setNotification(
-          { message: err.response.data.error, isError: true },
-          5000
-        )
-      )
-    }
+    await dispatch(createBlog({ title, author, url }))
+    clearBlogForm()
   }
 
   return (

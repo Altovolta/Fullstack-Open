@@ -1,38 +1,63 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import blogService from '../services/blogs'
+import { setNotification } from './notificationReducer'
 
 export const createBlog = createAsyncThunk(
   '/blogs/createBlog',
-  async (blogInfo, { rejectWithValue }) => {
+  async (blogInfo, { dispatch }) => {
     try {
       const newBlog = await blogService.create(blogInfo)
+      const message = `A new blog '${blogInfo.title}' by ${blogInfo.author} added`
+
+      dispatch(setNotification({ message, isError: false }, 5000))
       return newBlog
     } catch (err) {
-      return rejectWithValue(err.response.data.error)
+      dispatch(
+        setNotification(
+          { message: err.response.data.error, isError: true },
+          5000
+        )
+      )
     }
   }
 )
 
 export const likeBlog = createAsyncThunk(
   '/blogs/likeBlog',
-  async (blog, { rejectWithValue }) => {
+  async (blog, { dispatch }) => {
     try {
       const updatedBlogInfo = { ...blog, likes: blog.likes + 1 }
-      return await blogService.update(updatedBlogInfo)
+      const updatedBlog = await blogService.update(updatedBlogInfo)
+      const message = `Liked '${blog.title}' by ${blog.author}`
+      dispatch(setNotification({ message, isError: false }, 5000))
+      return updatedBlog
     } catch (err) {
-      return rejectWithValue(err.response.data.error)
+      dispatch(
+        setNotification(
+          { message: err.response.data.error, isError: true },
+          5000
+        )
+      )
     }
   }
 )
 
 export const removeBlog = createAsyncThunk(
   '/blogs/removeBlog',
-  async (id, { rejectWithValue }) => {
+  async (blog, { dispatch }) => {
     try {
-      await blogService.remove({ id })
-      return id
+      await blogService.remove({ id: blog.id })
+      const message = `Blog '${blog.title}' deleted`
+
+      dispatch(setNotification({ message, isError: false }, 5000))
+      return blog.id
     } catch (err) {
-      return rejectWithValue(err.response.data.error)
+      dispatch(
+        setNotification(
+          { message: err.response.data.error, isError: true },
+          5000
+        )
+      )
     }
   }
 )

@@ -16,8 +16,6 @@ export const loginUser = createAsyncThunk(
       blogService.setToken(userResponse.token)
       return userResponse
     } catch (err) {
-      console.log(err)
-
       dispatch(
         setNotification(
           { message: err.response.data.error, isError: true },

@@ -30,26 +30,7 @@ const Blog = ({ blog, currentUser }) => {
   }
 
   const onLike = async (blog) => {
-    try {
-      await dispatch(likeBlog(blog)).unwrap()
-
-      dispatch(
-        setNotification(
-          {
-            message: `Liked '${blog.title}' by ${blog.author}`,
-            isError: false,
-          },
-          5000
-        )
-      )
-    } catch (err) {
-      dispatch(
-        setNotification(
-          { message: err.response.data.error, isError: true },
-          5000
-        )
-      )
-    }
+    await dispatch(likeBlog(blog))
   }
 
   const onRemove = async (blog) => {
@@ -58,27 +39,7 @@ const Blog = ({ blog, currentUser }) => {
     )
 
     if (shouldDelete) {
-      try {
-        await dispatch(removeBlog(blog.id)).unwrap()
-
-        dispatch(
-          setNotification(
-            {
-              message: `Blog '${blog.title}' deleted`,
-              isError: false,
-            },
-            5000
-          )
-        )
-      } catch (err) {
-        console.log(err)
-        dispatch(
-          setNotification(
-            { message: err.response.data.error, isError: true },
-            5000
-          )
-        )
-      }
+      await dispatch(removeBlog(blog))
     }
   }
 
