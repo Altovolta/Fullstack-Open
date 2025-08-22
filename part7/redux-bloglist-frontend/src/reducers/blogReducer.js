@@ -78,7 +78,6 @@ const blogSlice = createSlice({
         return newState
       })
       .addCase(likeBlog.fulfilled, (state, action) => {
-        console.log(action)
         const updatedBlogs = state.map((blog) =>
           blog.id === action.payload.id ? action.payload : blog
         )
@@ -86,9 +85,7 @@ const blogSlice = createSlice({
         return updatedBlogs
       })
       .addCase(removeBlog.fulfilled, (state, action) => {
-        console.log(action.payload)
         const newState = state.filter((blog) => blog.id !== action.payload)
-        console.log(newState)
         return newState
       })
   },

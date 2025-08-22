@@ -2,9 +2,8 @@ import { useState } from 'react'
 
 import { useDispatch } from 'react-redux'
 import { createBlog } from '../reducers/blogReducer'
-import { setNotification } from '../reducers/notificationReducer'
 
-const BlogForm = () => {
+const BlogForm = ({ toggleVisibility }) => {
   const dispatch = useDispatch()
 
   const [title, setTitle] = useState('')
@@ -22,6 +21,7 @@ const BlogForm = () => {
     event.preventDefault()
     await dispatch(createBlog({ title, author, url }))
     clearBlogForm()
+    toggleVisibility()
   }
 
   return (
