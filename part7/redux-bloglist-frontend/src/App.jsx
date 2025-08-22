@@ -57,40 +57,6 @@ const App = () => {
     blogService.setToken('')
   }
 
-  const removeBlog = async (blogToRemove) => {
-    const shouldDelete = window.confirm(
-      `Remove blog '${blogToRemove.title}' by ${blogToRemove.author}`
-    )
-
-    if (shouldDelete) {
-      try {
-        await blogService.remove({ id: blogToRemove.id })
-
-        const filteredBlogs = blogs.filter(
-          (blog) => blog.id !== blogToRemove.id
-        )
-        setBlogs(filteredBlogs)
-
-        dispatch(
-          setNotification(
-            {
-              message: `Blog '${blogToRemove.title}' deleted`,
-              isError: false,
-            },
-            5000
-          )
-        )
-      } catch (err) {
-        dispatch(
-          setNotification(
-            { message: err.response.data.error, isError: true },
-            5000
-          )
-        )
-      }
-    }
-  }
-
   const blogFormRef = useRef()
   const blogForm = () => {
     return (
@@ -120,12 +86,7 @@ const App = () => {
       {blogForm()}
       <br />
       {blogs.map((blog) => (
-        <Blog
-          key={blog.id}
-          blog={blog}
-          removeBlog={removeBlog}
-          currentUser={user}
-        />
+        <Blog key={blog.id} blog={blog} currentUser={user} />
       ))}
     </div>
   )

@@ -2,10 +2,10 @@ import { useState } from 'react'
 import PropTypes from 'prop-types'
 
 import { useDispatch } from 'react-redux'
-import { likeBlog } from '../reducers/blogReducer'
+import { likeBlog, removeBlog } from '../reducers/blogReducer'
 import { setNotification } from '../reducers/notificationReducer'
 
-const Blog = ({ blog, removeBlog, currentUser }) => {
+const Blog = ({ blog, currentUser }) => {
   const dispatch = useDispatch()
 
   const [visible, setVisible] = useState(false)
@@ -52,6 +52,36 @@ const Blog = ({ blog, removeBlog, currentUser }) => {
     }
   }
 
+  const onRemove = (blog) => {
+    const shouldDelete = window.confirm(
+      `Remove blog '${blog.title}' by ${blog.author}`
+    )
+
+    if (shouldDelete) {
+      try {
+        dispatch(removeBlog(blog.id))
+
+        dispatch(
+          setNotification(
+            {
+              message: `Blog '${blog.title}' deleted`,
+              isError: false,
+            },
+            5000
+          )
+        )
+      } catch (err) {
+        console.log(err)
+        dispatch(
+          setNotification(
+            { message: err.response.data.error, isError: true },
+            5000
+          )
+        )
+      }
+    }
+  }
+
   const blogDetails = () => {
     return (
       <>
@@ -62,7 +92,7 @@ const Blog = ({ blog, removeBlog, currentUser }) => {
         </div>
         <div>{blog.user.name}</div>
         <div style={userIsOwner}>
-          <button onClick={() => removeBlog(blog)}>remove</button>
+          <button onClick={() => onRemove(blog)}>remove</button>
         </div>
       </>
     )
@@ -80,8 +110,6 @@ const Blog = ({ blog, removeBlog, currentUser }) => {
 }
 
 Blog.propTypes = {
-  //onLike: PropTypes.func.isRequired,
-  removeBlog: PropTypes.func.isRequired,
   blog: PropTypes.shape({
     id: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,

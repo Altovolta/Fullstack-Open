@@ -18,7 +18,7 @@ const BlogForm = () => {
   }
 
   const onSubmit = async (event) => {
-    // TODO: inprove error handling
+    // TODO: inprove error handling. Add toggle when created
     event.preventDefault()
     try {
       dispatch(createBlog({ title, author, url }))
