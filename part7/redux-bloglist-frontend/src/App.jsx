@@ -1,22 +1,18 @@
-import { useState, useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import Blog from './components/Blog'
 import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
 import Togglable from './components/Togglable'
 import blogService from './services/blogs'
-import loginService from './services/login'
-
-import { setNotification } from './reducers/notificationReducer'
 import { initBlogs } from './reducers/blogReducer'
 import { useSelector, useDispatch } from 'react-redux'
+import { loadUser, logoutUser } from './reducers/userReducer'
 
 const App = () => {
   const dispatch = useDispatch()
   const blogs = useSelector((state) => state.blogs)
-
-  const [_, setBlogs] = useState([])
-  const [user, setUser] = useState(null)
+  const user = useSelector((state) => state.user)
 
   useEffect(() => {
     dispatch(initBlogs())
@@ -26,35 +22,13 @@ const App = () => {
     const userItem = window.localStorage.getItem('blogUser')
     if (userItem) {
       const loggedUser = JSON.parse(userItem)
-      setUser(loggedUser)
+      dispatch(loadUser(loggedUser))
       blogService.setToken(loggedUser.token)
     }
-  }, [])
-
-  const onLogin = async ({ username, password }) => {
-    try {
-      const userResponse = await loginService.login({
-        username,
-        password,
-      })
-
-      window.localStorage.setItem('blogUser', JSON.stringify(userResponse))
-      blogService.setToken(userResponse.token)
-      setUser(userResponse)
-    } catch (err) {
-      dispatch(
-        setNotification(
-          { message: err.response.data.error, isError: true },
-          5000
-        )
-      )
-    }
-  }
+  }, [dispatch])
 
   const handleLogout = () => {
-    window.localStorage.removeItem('blogUser')
-    setUser(null)
-    blogService.setToken('')
+    dispatch(logoutUser())
   }
 
   const blogFormRef = useRef()
@@ -70,7 +44,7 @@ const App = () => {
     return (
       <div>
         <Notification />
-        <LoginForm onLogin={onLogin} />
+        <LoginForm />
       </div>
     )
   }
