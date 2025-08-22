@@ -57,36 +57,6 @@ const App = () => {
     blogService.setToken('')
   }
 
-  // const onNewBlog = async ({ title, author, url }) => {
-  //   try {
-  //     const newBlog = await blogService.create({
-  //       title,
-  //       author,
-  //       url,
-  //     })
-
-  //     setBlogs(blogs.concat(newBlog))
-  //     dispatch(
-  //       setNotification(
-  //         {
-  //           message: `A new blog '${newBlog.title}' by ${newBlog.author} added`,
-  //           isError: false,
-  //         },
-  //         5000
-  //       )
-  //     )
-
-  //     blogFormRef.current.toggleVisibility()
-  //   } catch (err) {
-  //     dispatch(
-  //       setNotification(
-  //         { message: err.response.data.error, isError: true },
-  //         5000
-  //       )
-  //     )
-  //   }
-  // }
-
   const onLike = async (blog) => {
     const updatedBlogInfo = { ...blog, likes: blog.likes + 1 }
 
@@ -145,7 +115,6 @@ const App = () => {
   const blogForm = () => {
     return (
       <Togglable buttonLabel="create new blog" ref={blogFormRef}>
-        {/* <BlogForm onNewBlog={onNewBlog} /> */}
         <BlogForm />
       </Togglable>
     )
