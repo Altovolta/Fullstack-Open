@@ -6,7 +6,9 @@ const blogSlice = createSlice({
   initialState: [],
   reducers: {
     addNewBlog(state, action) {
-      state.push(action.payload)
+      const newState = [...state, action.payload]
+      newState.sort((blog1, blog2) => blog2.likes - blog1.likes)
+      return newState
     },
     setBlogs(state, action) {
       return action.payload
@@ -22,6 +24,15 @@ export const initBlogs = () => {
     console.log(blogs)
     blogs.sort((blog1, blog2) => blog2.likes - blog1.likes)
     dispatch(setBlogs(blogs))
+  }
+}
+
+export const createBlog = (blogInfo) => {
+  return async (dispatch) => {
+    const newBlog = await blogService.create(blogInfo)
+    console.log(newBlog)
+
+    dispatch(addNewBlog(newBlog))
   }
 }
 
