@@ -1,7 +1,13 @@
 import { useState } from 'react'
 import PropTypes from 'prop-types'
 
-const Blog = ({ blog, onLike, removeBlog, currentUser }) => {
+import { useDispatch } from 'react-redux'
+import { likeBlog } from '../reducers/blogReducer'
+import { setNotification } from '../reducers/notificationReducer'
+
+const Blog = ({ blog, removeBlog, currentUser }) => {
+  const dispatch = useDispatch()
+
   const [visible, setVisible] = useState(false)
 
   const showWhenVisible = { display: visible ? '' : 'none' }
@@ -21,6 +27,29 @@ const Blog = ({ blog, onLike, removeBlog, currentUser }) => {
 
   const changeVisibility = () => {
     setVisible(!visible)
+  }
+
+  const onLike = (blog) => {
+    try {
+      dispatch(likeBlog(blog))
+
+      dispatch(
+        setNotification(
+          {
+            message: `Liked '${blog.title}' by ${blog.author}`,
+            isError: false,
+          },
+          5000
+        )
+      )
+    } catch (err) {
+      dispatch(
+        setNotification(
+          { message: err.response.data.error, isError: true },
+          5000
+        )
+      )
+    }
   }
 
   const blogDetails = () => {
@@ -51,7 +80,7 @@ const Blog = ({ blog, onLike, removeBlog, currentUser }) => {
 }
 
 Blog.propTypes = {
-  onLike: PropTypes.func.isRequired,
+  //onLike: PropTypes.func.isRequired,
   removeBlog: PropTypes.func.isRequired,
   blog: PropTypes.shape({
     id: PropTypes.string.isRequired,
