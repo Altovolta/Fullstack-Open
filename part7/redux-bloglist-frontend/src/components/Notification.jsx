@@ -1,6 +1,8 @@
-import PropTypes from 'prop-types'
+import { useSelector } from 'react-redux'
 
-const Notification = ({ notification }) => {
+const Notification = () => {
+  const notification = useSelector((state) => state.notification)
+
   if (notification.message === null) return null
 
   const color = notification.isError ? 'red' : 'green'
@@ -20,13 +22,6 @@ const Notification = ({ notification }) => {
       {notification.message}
     </div>
   )
-}
-
-Notification.propTypes = {
-  notification: PropTypes.shape({
-    message: PropTypes.string,
-    isError: PropTypes.bool.isRequired,
-  }),
 }
 
 export default Notification
