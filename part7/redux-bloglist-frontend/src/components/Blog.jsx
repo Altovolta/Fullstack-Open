@@ -29,9 +29,9 @@ const Blog = ({ blog, currentUser }) => {
     setVisible(!visible)
   }
 
-  const onLike = (blog) => {
+  const onLike = async (blog) => {
     try {
-      dispatch(likeBlog(blog))
+      await dispatch(likeBlog(blog)).unwrap()
 
       dispatch(
         setNotification(
@@ -52,14 +52,14 @@ const Blog = ({ blog, currentUser }) => {
     }
   }
 
-  const onRemove = (blog) => {
+  const onRemove = async (blog) => {
     const shouldDelete = window.confirm(
       `Remove blog '${blog.title}' by ${blog.author}`
     )
 
     if (shouldDelete) {
       try {
-        dispatch(removeBlog(blog.id))
+        await dispatch(removeBlog(blog.id)).unwrap()
 
         dispatch(
           setNotification(

@@ -21,7 +21,7 @@ const BlogForm = () => {
     // TODO: inprove error handling. Add toggle when created
     event.preventDefault()
     try {
-      dispatch(createBlog({ title, author, url }))
+      await dispatch(createBlog({ title, author, url })).unwrap()
       clearBlogForm()
 
       dispatch(
