@@ -1,25 +1,22 @@
 import { useState, useEffect, useRef } from 'react'
+import { useQuery } from '@tanstack/react-query'
+
 import Blog from './components/Blog'
 import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
 import Togglable from './components/Togglable'
+
 import blogService from './services/blogs'
 import loginService from './services/login'
+
 import { useNotification } from './hooks/useNotification'
 
 const App = () => {
-  const [blogs, setBlogs] = useState([])
+  const [_, setBlogs] = useState([])
   const [user, setUser] = useState(null)
 
   const notifyWith = useNotification()
-
-  useEffect(() => {
-    blogService.getAll().then((blogs) => {
-      blogs.sort((blog1, blog2) => blog2.likes - blog1.likes)
-      setBlogs(blogs)
-    })
-  }, [])
 
   useEffect(() => {
     const userItem = window.localStorage.getItem('blogUser')
@@ -29,6 +26,20 @@ const App = () => {
       blogService.setToken(loggedUser.token)
     }
   }, [])
+
+  const blogFormRef = useRef()
+
+  const queryResult = useQuery({
+    queryKey: ['blogs'],
+    queryFn: blogService.getAll,
+    refetchOnWindowFocus: false,
+  })
+
+  if (queryResult.isLoading) {
+    return <div>Loding blogs...</div>
+  }
+
+  const blogs = queryResult.data
 
   const onLogin = async ({ username, password }) => {
     try {
@@ -50,25 +61,6 @@ const App = () => {
     window.localStorage.removeItem('blogUser')
     setUser(null)
     blogService.setToken('')
-  }
-
-  const onNewBlog = async ({ title, author, url }) => {
-    try {
-      const newBlog = await blogService.create({
-        title,
-        author,
-        url,
-      })
-
-      setBlogs(blogs.concat(newBlog))
-      const message = `A new blog '${newBlog.title}' by ${newBlog.author} added`
-      notifyWith({ message, isError: false })
-
-      blogFormRef.current.toggleVisibility()
-    } catch (err) {
-      const message = err.response.data.error
-      notifyWith({ message, isError: true })
-    }
   }
 
   const onLike = async (blog) => {
@@ -109,11 +101,10 @@ const App = () => {
     }
   }
 
-  const blogFormRef = useRef()
   const blogForm = () => {
     return (
       <Togglable buttonLabel="create new blog" ref={blogFormRef}>
-        <BlogForm onNewBlog={onNewBlog} />
+        <BlogForm />
       </Togglable>
     )
   }

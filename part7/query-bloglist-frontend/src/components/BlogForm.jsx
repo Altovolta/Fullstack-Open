@@ -1,10 +1,31 @@
 import { useState } from 'react'
-import PropTypes from 'prop-types'
 
-const BlogForm = ({ onNewBlog }) => {
+import { useQueryClient, useMutation } from '@tanstack/react-query'
+import { useNotification } from '../hooks/useNotification'
+import blogService from '../services/blogs'
+
+const BlogForm = () => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
+
+  const notifyWith = useNotification()
+  const queryClient = useQueryClient()
+
+  // TODO: toggle visibility (blogFormRef.current.toggleVisibility())
+  const newBlogMutation = useMutation({
+    mutationFn: blogService.create,
+    onSuccess: (newBlog) => {
+      const blogs = queryClient.getQueryData(['blogs'])
+      queryClient.setQueryData(['blogs'], blogs.concat(newBlog))
+      const message = `A new blog '${newBlog.title}' by ${newBlog.author} added`
+      notifyWith({ message, isError: false })
+    },
+    onError: (err) => {
+      const message = err.response.data.error
+      notifyWith({ message, isError: true })
+    },
+  })
 
   const clearBlogForm = () => {
     setTitle('')
@@ -14,7 +35,7 @@ const BlogForm = ({ onNewBlog }) => {
 
   const onSubmit = async (event) => {
     event.preventDefault()
-    await onNewBlog({ title, author, url })
+    newBlogMutation.mutate({ title, author, url })
     clearBlogForm()
   }
 
@@ -61,10 +82,6 @@ const BlogForm = ({ onNewBlog }) => {
       </form>
     </div>
   )
-}
-
-BlogForm.propTypes = {
-  onNewBlog: PropTypes.func.isRequired,
 }
 
 export default BlogForm
