@@ -17,6 +17,7 @@ import UserContext from './contexts/userContext'
 const App = () => {
   const notifyWith = useNotification()
   const [_, userDispatch] = useContext(UserContext)
+  const blogFormRef = useRef()
 
   useEffect(() => {
     const userItem = window.localStorage.getItem('blogUser')
@@ -28,13 +29,12 @@ const App = () => {
   }, [userDispatch])
 
   const user = useUser()
-  const blogFormRef = useRef()
 
-  //TODO: sort data
   const queryResult = useQuery({
     queryKey: ['blogs'],
     queryFn: blogService.getAll,
     refetchOnWindowFocus: false,
+    select: (data) => data.sort((a, b) => b.likes - a.likes),
   })
 
   const onLogin = async ({ username, password }) => {
@@ -53,7 +53,9 @@ const App = () => {
   const blogForm = () => {
     return (
       <Togglable buttonLabel="create new blog" ref={blogFormRef}>
-        <BlogForm />
+        <BlogForm
+          toggleVisibility={() => blogFormRef.current.toggleVisibility()}
+        />
       </Togglable>
     )
   }

@@ -4,7 +4,7 @@ import { useQueryClient, useMutation } from '@tanstack/react-query'
 import { useNotification } from '../hooks/useNotification'
 import blogService from '../services/blogs'
 
-const BlogForm = () => {
+const BlogForm = ({ toggleVisibility }) => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
@@ -12,7 +12,6 @@ const BlogForm = () => {
   const notifyWith = useNotification()
   const queryClient = useQueryClient()
 
-  // TODO: toggle visibility (blogFormRef.current.toggleVisibility())
   const newBlogMutation = useMutation({
     mutationFn: blogService.create,
     onSuccess: (newBlog) => {
@@ -37,6 +36,7 @@ const BlogForm = () => {
     event.preventDefault()
     newBlogMutation.mutate({ title, author, url })
     clearBlogForm()
+    toggleVisibility()
   }
 
   return (
