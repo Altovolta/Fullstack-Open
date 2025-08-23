@@ -63,22 +63,6 @@ const App = () => {
     blogService.setToken('')
   }
 
-  const onLike = async (blog) => {
-    const updatedBlogInfo = { ...blog, likes: blog.likes + 1 }
-
-    try {
-      const updatedBlog = await blogService.update(updatedBlogInfo)
-      const updatedBlogs = blogs.map((blog) =>
-        blog.id === updatedBlog.id ? updatedBlog : blog
-      )
-      updatedBlogs.sort((blog1, blog2) => blog2.likes - blog1.likes)
-      setBlogs(updatedBlogs)
-    } catch (err) {
-      const message = err.response.data.error
-      notifyWith({ message, isError: true })
-    }
-  }
-
   const removeBlog = async (blogToRemove) => {
     const shouldDelete = window.confirm(
       `Remove blog '${blogToRemove.title}' by ${blogToRemove.author}`
@@ -132,7 +116,6 @@ const App = () => {
         <Blog
           key={blog.id}
           blog={blog}
-          onLike={onLike}
           removeBlog={removeBlog}
           currentUser={user}
         />
