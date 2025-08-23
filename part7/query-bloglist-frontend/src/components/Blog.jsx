@@ -4,7 +4,7 @@ import { useQueryClient, useMutation } from '@tanstack/react-query'
 import { useNotification } from '../hooks/useNotification'
 import blogService from '../services/blogs'
 
-const Blog = ({ blog, removeBlog, currentUser }) => {
+const Blog = ({ blog, currentUser }) => {
   const [visible, setVisible] = useState(false)
 
   const showWhenVisible = { display: visible ? '' : 'none' }
@@ -46,6 +46,33 @@ const Blog = ({ blog, removeBlog, currentUser }) => {
     likeBlogMutation.mutate({ ...blog, likes: blog.likes + 1 })
   }
 
+  const removeBlogMutation = useMutation({
+    mutationFn: blogService.remove,
+    onSuccess: () => {
+      const blogs = queryClient.getQueryData(['blogs'])
+      const filteredBlogs = blogs.filter((b) => b.id !== blog.id)
+
+      queryClient.setQueryData(['blogs'], filteredBlogs)
+
+      const message = `Blog '${blog.title}' deleted`
+      notifyWith({ message, isError: false })
+    },
+    onError: (err) => {
+      const message = err.response.data.error
+      notifyWith({ message, isError: true })
+    },
+  })
+
+  const removeBlog = () => {
+    const shouldDelete = window.confirm(
+      `Remove blog '${blog.title}' by ${blog.author}`
+    )
+
+    if (shouldDelete) {
+      removeBlogMutation.mutate({ id: blog.id })
+    }
+  }
+
   const changeVisibility = () => {
     setVisible(!visible)
   }
@@ -60,7 +87,7 @@ const Blog = ({ blog, removeBlog, currentUser }) => {
         </div>
         <div>{blog.user.name}</div>
         <div style={userIsOwner}>
-          <button onClick={() => removeBlog(blog)}>remove</button>
+          <button onClick={removeBlog}>remove</button>
         </div>
       </>
     )
@@ -78,7 +105,6 @@ const Blog = ({ blog, removeBlog, currentUser }) => {
 }
 
 Blog.propTypes = {
-  removeBlog: PropTypes.func.isRequired,
   blog: PropTypes.shape({
     id: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,

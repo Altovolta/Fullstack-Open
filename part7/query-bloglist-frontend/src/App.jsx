@@ -29,6 +29,7 @@ const App = () => {
 
   const blogFormRef = useRef()
 
+  //TODO: sort data
   const queryResult = useQuery({
     queryKey: ['blogs'],
     queryFn: blogService.getAll,
@@ -63,28 +64,6 @@ const App = () => {
     blogService.setToken('')
   }
 
-  const removeBlog = async (blogToRemove) => {
-    const shouldDelete = window.confirm(
-      `Remove blog '${blogToRemove.title}' by ${blogToRemove.author}`
-    )
-
-    if (shouldDelete) {
-      try {
-        await blogService.remove({ id: blogToRemove.id })
-
-        const filteredBlogs = blogs.filter(
-          (blog) => blog.id !== blogToRemove.id
-        )
-        setBlogs(filteredBlogs)
-        const message = `Blog '${blogToRemove.title}' deleted`
-        notifyWith({ message, isError: true })
-      } catch (err) {
-        const message = err.response.data.error
-        notifyWith({ message, isError: true })
-      }
-    }
-  }
-
   const blogForm = () => {
     return (
       <Togglable buttonLabel="create new blog" ref={blogFormRef}>
@@ -113,12 +92,7 @@ const App = () => {
       {blogForm()}
       <br />
       {blogs.map((blog) => (
-        <Blog
-          key={blog.id}
-          blog={blog}
-          removeBlog={removeBlog}
-          currentUser={user}
-        />
+        <Blog key={blog.id} blog={blog} currentUser={user} />
       ))}
     </div>
   )
