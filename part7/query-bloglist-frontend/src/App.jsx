@@ -1,4 +1,4 @@
-import { useEffect, useRef, useContext } from 'react'
+import { useContext, useEffect, useRef } from 'react'
 import { useQuery } from '@tanstack/react-query'
 
 import Blog from './components/Blog'
@@ -11,22 +11,23 @@ import blogService from './services/blogs'
 import loginService from './services/login'
 
 import { useNotification } from './hooks/useNotification'
-
+import { useUser } from './hooks/useUser'
 import UserContext from './contexts/userContext'
 
 const App = () => {
-  const [loggedUser, userDispatch] = useContext(UserContext)
   const notifyWith = useNotification()
+  const [_, userDispatch] = useContext(UserContext)
 
   useEffect(() => {
     const userItem = window.localStorage.getItem('blogUser')
     if (userItem) {
-      const loggedUser = JSON.parse(userItem)
-      userDispatch({ type: 'SET', payload: loggedUser })
-      blogService.setToken(loggedUser.token)
+      const user = JSON.parse(userItem)
+      userDispatch({ type: 'SET', payload: user })
+      blogService.setToken(user.token)
     }
   }, [userDispatch])
 
+  const user = useUser()
   const blogFormRef = useRef()
 
   //TODO: sort data
@@ -36,32 +37,17 @@ const App = () => {
     refetchOnWindowFocus: false,
   })
 
-  if (queryResult.isLoading) {
-    return <div>Loding blogs...</div>
-  }
-
-  const blogs = queryResult.data
-
   const onLogin = async ({ username, password }) => {
     try {
-      const user = await loginService.login({
+      const currentUser = await loginService.login({
         username,
         password,
       })
-
-      window.localStorage.setItem('blogUser', JSON.stringify(user))
-      blogService.setToken(user.token)
-      userDispatch({ type: 'SET', payload: user })
+      user.logIn(currentUser)
     } catch (err) {
       const message = err.response.data.error
       notifyWith({ message, isError: true })
     }
-  }
-
-  const handleLogout = () => {
-    window.localStorage.removeItem('blogUser')
-    userDispatch({ type: 'CLEAR' })
-    blogService.setToken('')
   }
 
   const blogForm = () => {
@@ -72,7 +58,13 @@ const App = () => {
     )
   }
 
-  if (loggedUser === null) {
+  if (queryResult.isLoading) {
+    return <div>Loading blogs...</div>
+  }
+
+  const blogs = queryResult.data
+
+  if (user.currentUser === null) {
     return (
       <div>
         <Notification />
@@ -86,8 +78,8 @@ const App = () => {
       <h2>blogs</h2>
       <Notification />
       <div>
-        {loggedUser.name} logged in{' '}
-        <button onClick={() => handleLogout()}>logout</button>
+        {user.currentUser.name} logged in{' '}
+        <button onClick={user.logOut}>logout</button>
       </div>
       {blogForm()}
       <br />
