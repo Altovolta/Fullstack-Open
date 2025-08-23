@@ -6,15 +6,13 @@ import BlogForm from './components/BlogForm'
 import Togglable from './components/Togglable'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import { useNotification } from './hooks/useNotification'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
 
-  const [notification, setNotification] = useState({
-    message: null,
-    isError: false,
-  })
+  const notifyWith = useNotification()
 
   useEffect(() => {
     blogService.getAll().then((blogs) => {
@@ -32,12 +30,6 @@ const App = () => {
     }
   }, [])
 
-  const setNotificarionTimeout = () => {
-    setTimeout(() => {
-      setNotification({ message: null, isError: false })
-    }, 5000)
-  }
-
   const onLogin = async ({ username, password }) => {
     try {
       const userResponse = await loginService.login({
@@ -49,10 +41,9 @@ const App = () => {
       blogService.setToken(userResponse.token)
       setUser(userResponse)
     } catch (err) {
-      setNotification({ message: err.response.data.error, isError: true })
+      const message = err.response.data.error
+      notifyWith({ message, isError: true })
     }
-
-    setNotificarionTimeout()
   }
 
   const handleLogout = () => {
@@ -70,17 +61,14 @@ const App = () => {
       })
 
       setBlogs(blogs.concat(newBlog))
-      setNotification({
-        message: `A new blog '${newBlog.title}' by ${newBlog.author} added`,
-        isError: false,
-      })
+      const message = `A new blog '${newBlog.title}' by ${newBlog.author} added`
+      notifyWith({ message, isError: false })
 
       blogFormRef.current.toggleVisibility()
     } catch (err) {
-      setNotification({ message: err.response.data.error, isError: true })
+      const message = err.response.data.error
+      notifyWith({ message, isError: true })
     }
-
-    setNotificarionTimeout()
   }
 
   const onLike = async (blog) => {
@@ -94,10 +82,9 @@ const App = () => {
       updatedBlogs.sort((blog1, blog2) => blog2.likes - blog1.likes)
       setBlogs(updatedBlogs)
     } catch (err) {
-      setNotification({ message: err.response.data.error, isError: true })
+      const message = err.response.data.error
+      notifyWith({ message, isError: true })
     }
-
-    setNotificarionTimeout()
   }
 
   const removeBlog = async (blogToRemove) => {
@@ -113,16 +100,12 @@ const App = () => {
           (blog) => blog.id !== blogToRemove.id
         )
         setBlogs(filteredBlogs)
-
-        setNotification({
-          message: `Blog '${blogToRemove.title}' deleted`,
-          isError: false,
-        })
+        const message = `Blog '${blogToRemove.title}' deleted`
+        notifyWith({ message, isError: true })
       } catch (err) {
-        setNotification({ message: err.response.data.error, isError: true })
+        const message = err.response.data.error
+        notifyWith({ message, isError: true })
       }
-
-      setNotificarionTimeout()
     }
   }
 
@@ -138,7 +121,7 @@ const App = () => {
   if (user === null) {
     return (
       <div>
-        <Notification notification={notification} />
+        <Notification />
         <LoginForm onLogin={onLogin} />
       </div>
     )
@@ -147,7 +130,7 @@ const App = () => {
   return (
     <div>
       <h2>blogs</h2>
-      <Notification notification={notification} />
+      <Notification />
       <div>
         {user.name} logged in{' '}
         <button onClick={() => handleLogout()}>logout</button>
