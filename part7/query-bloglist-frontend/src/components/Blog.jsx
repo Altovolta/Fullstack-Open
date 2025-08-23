@@ -3,9 +3,12 @@ import PropTypes from 'prop-types'
 import { useQueryClient, useMutation } from '@tanstack/react-query'
 import { useNotification } from '../hooks/useNotification'
 import blogService from '../services/blogs'
+import { useContext } from 'react'
+import UserContext from '../contexts/userContext'
 
-const Blog = ({ blog, currentUser }) => {
+const Blog = ({ blog }) => {
   const [visible, setVisible] = useState(false)
+  const [currentUser] = useContext(UserContext)
 
   const showWhenVisible = { display: visible ? '' : 'none' }
   const userIsOwner = {

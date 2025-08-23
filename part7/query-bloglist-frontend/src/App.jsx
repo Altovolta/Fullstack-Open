@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useEffect, useRef, useContext } from 'react'
 import { useQuery } from '@tanstack/react-query'
 
 import Blog from './components/Blog'
@@ -12,20 +12,20 @@ import loginService from './services/login'
 
 import { useNotification } from './hooks/useNotification'
 
-const App = () => {
-  const [_, setBlogs] = useState([])
-  const [user, setUser] = useState(null)
+import UserContext from './contexts/userContext'
 
+const App = () => {
+  const [loggedUser, userDispatch] = useContext(UserContext)
   const notifyWith = useNotification()
 
   useEffect(() => {
     const userItem = window.localStorage.getItem('blogUser')
     if (userItem) {
       const loggedUser = JSON.parse(userItem)
-      setUser(loggedUser)
+      userDispatch({ type: 'SET', payload: loggedUser })
       blogService.setToken(loggedUser.token)
     }
-  }, [])
+  }, [userDispatch])
 
   const blogFormRef = useRef()
 
@@ -44,14 +44,14 @@ const App = () => {
 
   const onLogin = async ({ username, password }) => {
     try {
-      const userResponse = await loginService.login({
+      const user = await loginService.login({
         username,
         password,
       })
 
-      window.localStorage.setItem('blogUser', JSON.stringify(userResponse))
-      blogService.setToken(userResponse.token)
-      setUser(userResponse)
+      window.localStorage.setItem('blogUser', JSON.stringify(user))
+      blogService.setToken(user.token)
+      userDispatch({ type: 'SET', payload: user })
     } catch (err) {
       const message = err.response.data.error
       notifyWith({ message, isError: true })
@@ -60,7 +60,7 @@ const App = () => {
 
   const handleLogout = () => {
     window.localStorage.removeItem('blogUser')
-    setUser(null)
+    userDispatch({ type: 'CLEAR' })
     blogService.setToken('')
   }
 
@@ -72,7 +72,7 @@ const App = () => {
     )
   }
 
-  if (user === null) {
+  if (loggedUser === null) {
     return (
       <div>
         <Notification />
@@ -86,13 +86,13 @@ const App = () => {
       <h2>blogs</h2>
       <Notification />
       <div>
-        {user.name} logged in{' '}
+        {loggedUser.name} logged in{' '}
         <button onClick={() => handleLogout()}>logout</button>
       </div>
       {blogForm()}
       <br />
       {blogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} currentUser={user} />
+        <Blog key={blog.id} blog={blog} />
       ))}
     </div>
   )
