@@ -1,11 +1,12 @@
 import { useContext, useEffect, useRef } from 'react'
 import { useQuery } from '@tanstack/react-query'
 
-import Blog from './components/Blog'
 import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
 import Togglable from './components/Togglable'
+
+import Home from './pages/Home'
 
 import blogService from './services/blogs'
 import loginService from './services/login'
@@ -13,6 +14,7 @@ import loginService from './services/login'
 import { useNotification } from './hooks/useNotification'
 import { useUser } from './hooks/useUser'
 import UserContext from './contexts/userContext'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 
 const App = () => {
   const notifyWith = useNotification()
@@ -85,9 +87,11 @@ const App = () => {
       </div>
       {blogForm()}
       <br />
-      {blogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} />
-      ))}
+      <Router>
+        <Routes>
+          <Route path="/" element={<Home />} />
+        </Routes>
+      </Router>
     </div>
   )
 }
