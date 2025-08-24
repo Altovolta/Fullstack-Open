@@ -1,8 +1,9 @@
 import { useContext, useEffect } from 'react'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { Routes, Route } from 'react-router-dom'
 
 import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
+import Header from './components/Header'
 
 import Home from './pages/Home'
 import Users from './pages/Users'
@@ -58,18 +59,13 @@ const App = () => {
     <div>
       <h2>blogs</h2>
       <Notification />
-      <div>
-        {user.currentUser.name} logged in{' '}
-        <button onClick={user.logOut}>logout</button>
-      </div>
-      <Router>
-        <Routes>
-          <Route path="/blogs/:id" element={<Blog />} />
-          <Route path="/users/:id" element={<User />} />
-          <Route path="/users" element={<Users />} />
-          <Route path="/" element={<Home />} />
-        </Routes>
-      </Router>
+      <Header />
+      <Routes>
+        <Route path="/blogs/:id" element={<Blog />} />
+        <Route path="/users/:id" element={<User />} />
+        <Route path="/users" element={<Users />} />
+        <Route path="/" element={<Home />} />
+      </Routes>
     </div>
   )
 }
