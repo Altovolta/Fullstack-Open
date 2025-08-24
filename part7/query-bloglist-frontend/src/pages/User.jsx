@@ -10,12 +10,9 @@ const User = () => {
     refetchOnWindowFocus: false,
   })
 
-  if (queryResult.isLoading) return null
+  if (queryResult.isLoading || !queryResult.data) return null
 
-  const users = queryResult.data
-  if (!users) return null
-
-  const user = users.find((user) => user.id === userId)
+  const user = queryResult.data.find((user) => user.id === userId)
 
   if (!user) return <h2>User not found</h2>
 

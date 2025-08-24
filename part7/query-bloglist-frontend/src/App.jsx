@@ -15,6 +15,7 @@ import { useNotification } from './hooks/useNotification'
 import { useUser } from './hooks/useUser'
 
 import UserContext from './contexts/userContext'
+import Blog from './pages/Blog'
 
 const App = () => {
   const notifyWith = useNotification()
@@ -63,6 +64,7 @@ const App = () => {
       </div>
       <Router>
         <Routes>
+          <Route path="/blogs/:id" element={<Blog />} />
           <Route path="/users/:id" element={<User />} />
           <Route path="/users" element={<Users />} />
           <Route path="/" element={<Home />} />

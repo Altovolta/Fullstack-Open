@@ -1,9 +1,10 @@
-import Blog from '../components/Blog'
+//import Blog from '../components/Blog'
 import { useQuery } from '@tanstack/react-query'
 import BlogForm from '../components/BlogForm'
 import Togglable from '../components/Togglable'
 import { useRef } from 'react'
 import blogService from '../services/blogs'
+import { Link } from 'react-router-dom'
 
 const Home = () => {
   const queryResult = useQuery({
@@ -30,12 +31,26 @@ const Home = () => {
     )
   }
 
+  const blogStyle = {
+    paddingTop: 5,
+    paddingBottom: 5,
+    paddingLeft: 3,
+    border: 'solid',
+    borderWidth: 3,
+    marginBottom: 7,
+    borderColor: 'black',
+  }
+
   return (
     <div>
       {blogForm()}
       <br />
       {blogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} />
+        <div key={blog.id} style={blogStyle}>
+          <Link to={`/blogs/${blog.id}`}>
+            {blog.title} - {blog.author}{' '}
+          </Link>
+        </div>
       ))}
     </div>
   )
