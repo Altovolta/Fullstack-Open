@@ -1,25 +1,24 @@
-import { useContext, useEffect, useRef } from 'react'
+import { useContext, useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
 
 import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
-import BlogForm from './components/BlogForm'
-import Togglable from './components/Togglable'
 
 import Home from './pages/Home'
 
 import blogService from './services/blogs'
 import loginService from './services/login'
+import userService from './services/users'
 
 import { useNotification } from './hooks/useNotification'
 import { useUser } from './hooks/useUser'
 import UserContext from './contexts/userContext'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import Users from './pages/Users'
 
 const App = () => {
   const notifyWith = useNotification()
   const [_, userDispatch] = useContext(UserContext)
-  const blogFormRef = useRef()
 
   useEffect(() => {
     const userItem = window.localStorage.getItem('blogUser')
@@ -39,6 +38,12 @@ const App = () => {
     select: (data) => data.sort((a, b) => b.likes - a.likes),
   })
 
+  const userQueryResult = useQuery({
+    queryKey: ['users'],
+    queryFn: userService.getAll,
+    refetchOnWindowFocus: false,
+  })
+
   const onLogin = async ({ username, password }) => {
     try {
       const currentUser = await loginService.login({
@@ -52,21 +57,9 @@ const App = () => {
     }
   }
 
-  const blogForm = () => {
-    return (
-      <Togglable buttonLabel="create new blog" ref={blogFormRef}>
-        <BlogForm
-          toggleVisibility={() => blogFormRef.current.toggleVisibility()}
-        />
-      </Togglable>
-    )
+  if (queryResult.isLoading || userQueryResult.isLoading) {
+    return <div>Loading data...</div>
   }
-
-  if (queryResult.isLoading) {
-    return <div>Loading blogs...</div>
-  }
-
-  const blogs = queryResult.data
 
   if (user.currentUser === null) {
     return (
@@ -85,11 +78,10 @@ const App = () => {
         {user.currentUser.name} logged in{' '}
         <button onClick={user.logOut}>logout</button>
       </div>
-      {blogForm()}
-      <br />
       <Router>
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/users" element={<Users />} />
         </Routes>
       </Router>
     </div>
