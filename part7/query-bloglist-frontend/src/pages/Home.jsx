@@ -1,13 +1,24 @@
 import Blog from '../components/Blog'
-import { useQueryClient } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import BlogForm from '../components/BlogForm'
 import Togglable from '../components/Togglable'
 import { useRef } from 'react'
+import blogService from '../services/blogs'
 
 const Home = () => {
-  const queryClient = useQueryClient()
-  const blogs = queryClient.getQueryData(['blogs'])
+  const queryResult = useQuery({
+    queryKey: ['blogs'],
+    queryFn: blogService.getAll,
+    refetchOnWindowFocus: false,
+    select: (data) => data.sort((a, b) => b.likes - a.likes),
+  })
   const blogFormRef = useRef()
+
+  if (queryResult.isLoading) {
+    return null
+  }
+
+  const blogs = queryResult.data
 
   const blogForm = () => {
     return (
