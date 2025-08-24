@@ -15,7 +15,6 @@ export const useBlogMutations = () => {
       )
       updatedBlogs.sort((blog1, blog2) => blog2.likes - blog1.likes)
       queryClient.setQueryData(['blogs'], updatedBlogs)
-      notifyWith({ message: 'Te gusto esa eh...', isError: false })
     },
     onError: (err) => {
       const message = err.response.data.error
@@ -41,5 +40,22 @@ export const useBlogMutations = () => {
     },
   })
 
-  return { likeBlogMutation, removeBlogMutation }
+  const commentBlogMutation = useMutation({
+    mutationFn: blogService.comment,
+    onSuccess: (updatedBlog) => {
+      const blogs = queryClient.getQueryData(['blogs'])
+      const updatedBlogs = blogs.map((blog) =>
+        blog.id === updatedBlog.id ? updatedBlog : blog
+      )
+      queryClient.setQueryData(['blogs'], updatedBlogs)
+      const message = 'Comment sent'
+      notifyWith({ message, isError: false })
+    },
+    onError: (err) => {
+      const message = err.response.data.error
+      notifyWith({ message, isError: true })
+    },
+  })
+
+  return { likeBlogMutation, removeBlogMutation, commentBlogMutation }
 }

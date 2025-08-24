@@ -5,6 +5,7 @@ import blogService from '../services/blogs'
 
 import { useUser } from '../hooks/useUser'
 import { useBlogMutations } from '../hooks/useBlogMutations'
+import CommentForm from '../components/CommentForm'
 
 const Blog = () => {
   const blogId = useParams().id
@@ -56,6 +57,13 @@ const Blog = () => {
       <div style={userIsOwner}>
         <button onClick={removeBlog}>remove</button>
       </div>
+      <h2> Comments</h2>
+      <CommentForm blogId={blogInfo.id} />
+      <ul>
+        {blogInfo.comments.map((comment) => (
+          <li key={comment.id}>{comment.text}</li>
+        ))}
+      </ul>
     </div>
   )
 }

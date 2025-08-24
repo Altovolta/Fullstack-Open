@@ -42,4 +42,9 @@ const update = ({ id, user, likes, author, title, url }) => {
   return request.then((response) => response.data)
 }
 
-export default { getAll, setToken, create, update, remove }
+const comment = ({ id, comment }) => {
+  const request = axios.post(`${baseUrl}/${id}/comments`, { text: comment })
+  return request.then((response) => response.data)
+}
+
+export default { getAll, setToken, create, update, remove, comment }

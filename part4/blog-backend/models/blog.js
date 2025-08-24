@@ -5,6 +5,10 @@ const blogSchema = mongoose.Schema({
     author: String,
     url: { type: String, required: true },
     likes: { type: Number, default: 0 , min: 0 },
+    comments: [{
+        text: { type: String, required: true },
+        createdAt: { type: Date, default: Date.now }
+    }],
     user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
@@ -14,6 +18,13 @@ const blogSchema = mongoose.Schema({
 blogSchema.set('toJSON', {
     transform: (document, returnedObject) => {
         returnedObject.id = returnedObject._id.toString()
+
+        returnedObject.comments.forEach(comment => {
+            comment.id = comment._id.toString()
+            delete comment._id
+            delete comment.__v
+        })
+
         delete returnedObject._id
         delete returnedObject.__v
         delete returnedObject.user.blogs

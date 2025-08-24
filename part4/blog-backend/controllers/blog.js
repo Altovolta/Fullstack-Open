@@ -19,7 +19,8 @@ blogRouter.post('/', async (request, response) => {
         author: request.body.author,
         url: request.body.url,
         likes: request.body.likes,
-        user: request.user.id
+        user: request.user.id,
+        comments: [],
     })
 
     const savedBlog = await blog.save()
@@ -56,6 +57,17 @@ blogRouter.put('/:id', async (request, response) => {
 
         const updatedBlog = await blogToUpdate.save()
 
+        response.json(updatedBlog)
+    }
+})
+
+blogRouter.post('/:id/comments', async (request, response) => {
+    const blog = await Blog.findById(request.params.id).populate('user')
+    if (!blog) {
+        response.status(404).send({ error: 'this blog does not exist' })
+    } else {
+        blog.comments.push(request.body)
+        const updatedBlog = await blog.save()
         response.json(updatedBlog)
     }
 })
