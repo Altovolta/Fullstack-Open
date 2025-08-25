@@ -6,6 +6,20 @@ export const useBlogMutations = () => {
   const queryClient = useQueryClient()
   const notifyWith = useNotification()
 
+  const newBlogMutation = useMutation({
+    mutationFn: blogService.create,
+    onSuccess: (newBlog) => {
+      const blogs = queryClient.getQueryData(['blogs'])
+      queryClient.setQueryData(['blogs'], blogs.concat(newBlog))
+      const message = `A new blog '${newBlog.title}' by ${newBlog.author} added`
+      notifyWith({ message, isError: false })
+    },
+    onError: (err) => {
+      const message = err.response.data.error
+      notifyWith({ message, isError: true })
+    },
+  })
+
   const likeBlogMutation = useMutation({
     mutationFn: blogService.update,
     onSuccess: (updatedBlog) => {
@@ -57,5 +71,10 @@ export const useBlogMutations = () => {
     },
   })
 
-  return { likeBlogMutation, removeBlogMutation, commentBlogMutation }
+  return {
+    newBlogMutation,
+    likeBlogMutation,
+    removeBlogMutation,
+    commentBlogMutation,
+  }
 }

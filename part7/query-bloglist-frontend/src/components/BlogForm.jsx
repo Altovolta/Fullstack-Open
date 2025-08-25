@@ -1,31 +1,14 @@
 import { useState } from 'react'
 
-import { useQueryClient, useMutation } from '@tanstack/react-query'
-import { useNotification } from '../hooks/useNotification'
-import blogService from '../services/blogs'
 import { Button, TextField, Typography } from '@mui/material'
+import { useBlogMutations } from '../hooks/useBlogMutations'
 
 const BlogForm = ({ toggleVisibility }) => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
 
-  const notifyWith = useNotification()
-  const queryClient = useQueryClient()
-
-  const newBlogMutation = useMutation({
-    mutationFn: blogService.create,
-    onSuccess: (newBlog) => {
-      const blogs = queryClient.getQueryData(['blogs'])
-      queryClient.setQueryData(['blogs'], blogs.concat(newBlog))
-      const message = `A new blog '${newBlog.title}' by ${newBlog.author} added`
-      notifyWith({ message, isError: false })
-    },
-    onError: (err) => {
-      const message = err.response.data.error
-      notifyWith({ message, isError: true })
-    },
-  })
+  const { newBlogMutation } = useBlogMutations()
 
   const clearBlogForm = () => {
     setTitle('')
