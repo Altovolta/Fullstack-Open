@@ -1,10 +1,19 @@
-//import Blog from '../components/Blog'
+import { useRef } from 'react'
+import { Link } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
+import {
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+} from '@mui/material'
+
 import BlogForm from '../components/BlogForm'
 import Togglable from '../components/Togglable'
-import { useRef } from 'react'
 import blogService from '../services/blogs'
-import { Link } from 'react-router-dom'
 
 const Home = () => {
   const queryResult = useQuery({
@@ -31,27 +40,29 @@ const Home = () => {
     )
   }
 
-  const blogStyle = {
-    paddingTop: 5,
-    paddingBottom: 5,
-    paddingLeft: 3,
-    border: 'solid',
-    borderWidth: 3,
-    marginBottom: 7,
-    borderColor: 'black',
-  }
-
   return (
     <div>
       {blogForm()}
-      <br />
-      {blogs.map((blog) => (
-        <div key={blog.id} style={blogStyle}>
-          <Link to={`/blogs/${blog.id}`}>
-            {blog.title} - {blog.author}{' '}
-          </Link>
-        </div>
-      ))}
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead sx={{ backgroundColor: '#dbe9a0' }}>
+            <TableRow>
+              <TableCell sx={{ fontWeight: 'bold' }}>Blog</TableCell>
+              <TableCell sx={{ fontWeight: 'bold' }}>Author</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {blogs.map((blog) => (
+              <TableRow key={blog.id}>
+                <TableCell>
+                  <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
+                </TableCell>
+                <TableCell>{blog.author}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </div>
   )
 }

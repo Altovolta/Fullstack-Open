@@ -1,5 +1,8 @@
 import { useQuery } from '@tanstack/react-query'
 import { Link } from 'react-router-dom'
+
+import { Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material'
+
 import userService from '../services/users'
 const Users = () => {
   const queryResult = useQuery({
@@ -17,22 +20,30 @@ const Users = () => {
   return (
     <div>
       <h2>Users</h2>
-      <table>
-        <tbody>
-          <tr>
-            <th></th>
-            <th>blogs created</th>
-          </tr>
+      <Table size="small" sx={{ width: '20%' }}>
+        <TableHead sx={{ backgroundColor: '#dbe9a0' }}>
+          <TableRow>
+            <TableCell sx={{ fontWeight: 'bold', textAlign: 'center' }}>
+              User
+            </TableCell>
+            <TableCell sx={{ fontWeight: 'bold', textAlign: 'center' }}>
+              Blogs created
+            </TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
           {users.map((user) => (
-            <tr key={user.id}>
-              <td>
+            <TableRow key={user.id}>
+              <TableCell sx={{ textAlign: 'center' }}>
                 <Link to={`/users/${user.id}`}>{user.name}</Link>
-              </td>
-              <td>{user.blogs.length}</td>
-            </tr>
+              </TableCell>
+              <TableCell sx={{ textAlign: 'center' }}>
+                {user.blogs.length}
+              </TableCell>
+            </TableRow>
           ))}
-        </tbody>
-      </table>
+        </TableBody>
+      </Table>
     </div>
   )
 }

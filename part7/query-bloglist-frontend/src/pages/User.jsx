@@ -1,6 +1,8 @@
 import { useParams } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import userService from '../services/users'
+
+import { List, ListItem, Typography } from '@mui/material'
 const User = () => {
   const userId = useParams().id
 
@@ -18,13 +20,23 @@ const User = () => {
 
   return (
     <div>
-      <h2>{user.name}</h2>
-      <h3>added blogs</h3>
-      <ul>
+      <Typography variant="h4" sx={{ marginTop: 1, marginBottom: 1 }}>
+        {user.name}
+      </Typography>
+      <Typography variant="h5">Blogs</Typography>
+      <List dense>
         {user.blogs.map((blog) => (
-          <li key={blog.id}>{blog.title}</li>
+          <ListItem
+            key={blog.id}
+            sx={{
+              marginBottom: '3px',
+              backgroundColor: '#d1c8f1',
+            }}
+          >
+            {blog.title}
+          </ListItem>
         ))}
-      </ul>
+      </List>
     </div>
   )
 }

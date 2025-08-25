@@ -1,3 +1,4 @@
+import { AppBar, Button, IconButton, Toolbar } from '@mui/material'
 import { useUser } from '../hooks/useUser'
 import { Link } from 'react-router-dom'
 
@@ -5,20 +6,36 @@ const Header = () => {
   const user = useUser()
   if (user.currentUser === null) return null
 
-  const headerStyle = {
-    backgroundColor: 'lightgrey',
-    paddingTop: 5,
-    paddingBottom: 5,
-    paddingLeft: 3,
-    marginBottom: 7,
-  }
-
   return (
-    <div style={headerStyle}>
-      <Link to={'/'}>Blogs</Link> <Link to={'/users'}>Users</Link>{' '}
-      {user.currentUser.name} logged in{' '}
-      <button onClick={user.logOut}>logout</button>
-    </div>
+    <AppBar position="static">
+      <Toolbar sx={{ backgroundColor: '#395d62' }}>
+        <IconButton edge="start" color="inherit" aria-label="menu"></IconButton>
+        <Button
+          color="inherit"
+          sx={{ fontWeight: 'bold' }}
+          component={Link}
+          to="/"
+        >
+          Blogs
+        </Button>
+        <Button
+          color="inherit"
+          sx={{ fontWeight: 'bold' }}
+          component={Link}
+          to="/users"
+        >
+          Users
+        </Button>
+
+        <Button
+          onClick={user.logOut}
+          color="inherit"
+          sx={{ marginLeft: 'auto', fontWeight: 'bold' }}
+        >
+          logout
+        </Button>
+      </Toolbar>
+    </AppBar>
   )
 }
 

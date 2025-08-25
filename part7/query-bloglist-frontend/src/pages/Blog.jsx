@@ -1,15 +1,17 @@
 import { useQuery } from '@tanstack/react-query'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 import blogService from '../services/blogs'
 
 import { useUser } from '../hooks/useUser'
 import { useBlogMutations } from '../hooks/useBlogMutations'
 import CommentForm from '../components/CommentForm'
+import { Button, List, ListItem, Typography } from '@mui/material'
 
 const Blog = () => {
   const blogId = useParams().id
   const { currentUser } = useUser()
+  const navigate = useNavigate()
   const { likeBlogMutation, removeBlogMutation } = useBlogMutations()
 
   const onLike = () => {
@@ -23,6 +25,7 @@ const Blog = () => {
 
     if (shouldDelete) {
       removeBlogMutation.mutate({ id: blogInfo.id })
+      navigate('/')
     }
   }
 
@@ -39,31 +42,74 @@ const Blog = () => {
 
   if (!blogInfo) return <h2>Blog not found</h2>
 
-  const userIsOwner = {
-    display: blogInfo.user.username === currentUser.username ? '' : 'none',
-  }
+  const userIsOwner = blogInfo.user.username === currentUser.username
 
   return (
     <div>
-      <h2>
+      <Typography
+        variant="h4"
+        sx={{ marginTop: 2, marginBottom: 2, fontWeight: 'bold' }}
+      >
         {blogInfo.title} - {blogInfo.author}
-      </h2>
-      <a href="url">{blogInfo.url}</a>
-      <div data-testid="blogLikes">
-        likes {blogInfo.likes}
-        <button onClick={onLike}>like</button>
-      </div>
-      <div>{blogInfo.user.name}</div>
-      <div style={userIsOwner}>
-        <button onClick={removeBlog}>remove</button>
-      </div>
-      <h2> Comments</h2>
+      </Typography>
+      <Typography variant="body1" sx={{ marginBottom: 1 }}>
+        url: <a href={blogInfo.url}>{blogInfo.url}</a>
+      </Typography>
+
+      <Typography
+        variant="body1"
+        data-testid="blogLikes"
+        sx={{ marginBottom: 1 }}
+      >
+        likes: {blogInfo.likes}
+      </Typography>
+      <Typography variant="body1" sx={{ marginBottom: 1 }}>
+        uploaded by {blogInfo.user.name}
+      </Typography>
+      <Button
+        color="inherit"
+        sx={{
+          backgroundColor: '#92dcec',
+          marginRight: '5px',
+          fontWeight: 'bold',
+        }}
+        onClick={onLike}
+      >
+        like
+      </Button>
+      {userIsOwner && (
+        <Button
+          color="inherit"
+          sx={{
+            backgroundColor: '#92dcec',
+            fontWeight: 'bold',
+          }}
+          onClick={removeBlog}
+        >
+          remove
+        </Button>
+      )}
+
+      <Typography
+        variant="h5"
+        sx={{ marginTop: 2, marginBottom: 2, fontWeight: 'bold' }}
+      >
+        Comments
+      </Typography>
       <CommentForm blogId={blogInfo.id} />
-      <ul>
+      <List dense>
         {blogInfo.comments.map((comment) => (
-          <li key={comment.id}>{comment.text}</li>
+          <ListItem
+            key={comment.id}
+            sx={{
+              marginBottom: '3px',
+              backgroundColor: '#d1c8f1',
+            }}
+          >
+            {comment.text}
+          </ListItem>
         ))}
-      </ul>
+      </List>
     </div>
   )
 }

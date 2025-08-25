@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useBlogMutations } from '../hooks/useBlogMutations'
+import { Button, TextField } from '@mui/material'
 
 const CommentForm = ({ blogId }) => {
   const [comment, setComment] = useState('')
@@ -13,12 +14,24 @@ const CommentForm = ({ blogId }) => {
 
   return (
     <form onSubmit={commentBlog}>
-      <input
-        type="text"
+      <TextField
+        label="comment"
         value={comment}
         onChange={({ target }) => setComment(target.value)}
+        sx={{}}
       />
-      <button type="submit">add comment</button>
+      <Button
+        color="inherit"
+        sx={{
+          backgroundColor: '#92dcec',
+          marginLeft: '5px',
+          marginTop: '7px',
+          fontWeight: 'bold',
+        }}
+        type="submit"
+      >
+        add comment
+      </Button>
     </form>
   )
 }

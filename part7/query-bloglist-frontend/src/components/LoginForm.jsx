@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import PropTypes from 'prop-types'
+import { Button, Box, TextField, Typography } from '@mui/material'
 
 const LoginForm = ({ onLogin }) => {
   const [username, setUsername] = useState('')
@@ -17,32 +18,49 @@ const LoginForm = ({ onLogin }) => {
   }
 
   return (
-    <>
-      <h2>Log in</h2>
+    <Box
+      display="flex"
+      justifyContent="center"
+      alignItems="center"
+      minHeight="100vh"
+      flexDirection="column"
+    >
+      <Typography
+        variant="h4"
+        sx={{ marginTop: 2, marginBottom: 2, fontWeight: 'bold' }}
+      >
+        Log in
+      </Typography>
       <form onSubmit={onSubmit} data-testid="login-form">
-        <div>
-          username
-          <input
-            type="text"
-            value={username}
-            onChange={({ target }) => setUsername(target.value)}
-            name="Username"
-            data-testid="username"
-          />
-        </div>
-        <div>
-          password
-          <input
-            type="password"
-            value={password}
-            onChange={({ target }) => setPassword(target.value)}
-            name="Password"
-            data-testid="password"
-          />
-        </div>
-        <button type="submit">Login</button>
+        <TextField
+          label="username"
+          value={username}
+          onChange={({ target }) => setUsername(target.value)}
+          name="Username"
+          data-testid="username"
+          sx={{ marginBottom: '5px', display: 'block' }}
+        />
+        <TextField
+          label="password"
+          type="password"
+          value={password}
+          onChange={({ target }) => setPassword(target.value)}
+          name="Password"
+          data-testid="password"
+          sx={{ marginBottom: '5px', display: 'block' }}
+        />
+        <Button
+          color="inherit"
+          sx={{
+            backgroundColor: '#92dcec',
+            fontWeight: 'bold',
+          }}
+          type="submit"
+        >
+          Login
+        </Button>
       </form>
-    </>
+    </Box>
   )
 }
 

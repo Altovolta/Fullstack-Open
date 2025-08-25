@@ -1,5 +1,6 @@
 import { useContext, useEffect } from 'react'
 import { Routes, Route } from 'react-router-dom'
+import { Container } from '@mui/material'
 
 import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
@@ -56,17 +57,17 @@ const App = () => {
   }
 
   return (
-    <div>
+    <Container>
       <h2>blogs</h2>
-      <Notification />
       <Header />
+      <Notification />
       <Routes>
         <Route path="/blogs/:id" element={<Blog />} />
         <Route path="/users/:id" element={<User />} />
         <Route path="/users" element={<Users />} />
         <Route path="/" element={<Home />} />
       </Routes>
-    </div>
+    </Container>
   )
 }
 
