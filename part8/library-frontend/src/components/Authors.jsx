@@ -1,36 +1,29 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { ALL_AUTHORS, EDIT_AUTHOR } from "../queries"
 import { useMutation, useQuery } from "@apollo/client/react"
+import Select from 'react-select'
 
 const Authors = (props) => {
 
-  const [ name, setName ] = useState('')
+  const [selectedOption, setSelectedOption] = useState(null)
   const [ birthYear, setBirthYear ] = useState('')
 
   const result = useQuery(ALL_AUTHORS)
 
-  const [ editAuthor, editAuthorResult ] = useMutation(EDIT_AUTHOR, {
+  const [ editAuthor ] = useMutation(EDIT_AUTHOR, {
     refetchQueries: [ { query: ALL_AUTHORS } ],
     onError: (error) => {
       console.log(error)
     }
   })
 
-  // Create notification for this if needed
-  useEffect(() => {    
-    if (editAuthorResult.data && editAuthorResult.data.editAuthor === null) {      
-      console.log("person not found")    
-    }  
-  }, [editAuthorResult.data])
-
   const changeYear = (event) => {
     event.preventDefault()
 
     editAuthor({variables: {
-      name,
+      name: selectedOption.value,
       setBornTo: Number(birthYear)
     }})
-    setName('')
     setBirthYear('')
   }
 
@@ -43,6 +36,14 @@ const Authors = (props) => {
   }
 
   const authors = result.data.allAuthors
+
+  const options = []
+  authors.forEach(author => {
+    options.push({
+      value: author.name,
+      label: author.name
+    })
+  })
 
   return (
     <div>
@@ -65,13 +66,12 @@ const Authors = (props) => {
       </table>
       <h2>Set birthyear</h2>
       <form onSubmit={changeYear}>
-        <div>
-          name 
-          <input 
-            value={name} 
-            onChange={({ target }) => setName(target.value)}
-          />
-        </div>
+        <Select 
+          onChange={setSelectedOption}
+          options={options}
+          isSearchable={true}
+          noOptionsMessage="No authors found"
+        />
         <div>
           born 
           <input 
