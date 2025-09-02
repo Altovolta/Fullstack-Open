@@ -138,13 +138,27 @@ const resolvers = {
     bookCount: (root) => books.filter(book => book.author === root.name).length
   },
   Mutation: {
-    addBook: (root, args) => {
-      const book = { ...args, id: randomUUID() }
-      books = books.concat(book)
+    addBook: async (root, args) => {
 
-      if(!authors.find(author => author.name === book.author)) {
-        const author = { name: book.author, id: randomUUID() }
-        authors = authors.concat(author)
+      let author = await Author.findOne({ name: args.author})
+
+      if (!author) {
+        author = new Author({name: args.author})
+        await author.save()
+      }
+      
+      const book = new Book({ ...args, author: author._id })
+      try {
+        await book.save()
+        await book.populate('author')
+      } catch (error) {
+        throw new GraphQLError('Coudnt create new book', {
+          extensions: {
+            code: 'BAD_USER_INPUT',
+            invalidArgs: args.name,
+            error
+          }
+        })
       }
       return book
     },
