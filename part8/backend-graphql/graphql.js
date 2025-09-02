@@ -81,7 +81,7 @@ const resolvers = {
         await book.save()
         await book.populate('author')
       } catch (error) {
-        throw new GraphQLError('Coudnt create new book', {
+        throw new GraphQLError('Could not create new book', {
           extensions: {
             code: 'BAD_USER_INPUT',
             invalidArgs: args.name,
@@ -91,17 +91,25 @@ const resolvers = {
       }
       return book
     },
-    editAuthor: (root, args) => {
-      const author =  authors.find(author => author.name === args.name)
-      if(!author) { return null }
+    editAuthor: async (root, args) => {
+      const author = await Author.findOne({name: args.name})
+      if(!author || !args.setBornTo) { return null }
 
-      const updatedAuthor = { ...author, born: args.setBornTo }
-      authors = authors.map(author => author.name === args.name 
-        ? updatedAuthor
-        : author
-      )
+      author.born = args.setBornTo
 
-      return updatedAuthor
+      try {
+        await author.save()
+      } catch (error) {
+        throw new GraphQLError('Could not update author', {
+          extensions: {
+            code: 'BAD_USER_INPUT',
+            invalidArgs: [args.name, args.setBornTo],
+            error
+          }
+        })
+      }
+
+      return author
     }
   }
 }
