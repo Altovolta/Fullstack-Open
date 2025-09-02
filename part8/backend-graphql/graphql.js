@@ -137,7 +137,7 @@ const resolvers = {
 
       return await Book.find(query).populate('author')
     },
-    allAuthors: () => authors,
+    allAuthors: async () => await Author.find({}),
   },
   Author: {
     bookCount: (root) => books.filter(book => book.author === root.name).length
