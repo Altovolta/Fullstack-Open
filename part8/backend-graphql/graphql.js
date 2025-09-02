@@ -125,12 +125,17 @@ const resolvers = {
       const authors = await Author.find({})
       return authors.length
     },
-    allBooks: (root, args) => {
-    
-      return books.filter(book => 
-        (!args.author || book.author === args.author) && 
-        (!args.genre || book.genres.includes(args.genre))
-      )
+    allBooks: async (root, args) => {
+      const query = {}
+      if (args.author) {
+        const author = await Author.findOne({name: args.author})
+        query.author = author ? author._id : null
+      }
+      if (args.genre) {
+        query.genres = args.genre
+      }
+
+      return await Book.find(query).populate('author')
     },
     allAuthors: () => authors,
   },
