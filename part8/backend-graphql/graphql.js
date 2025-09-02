@@ -1,4 +1,5 @@
 const { GraphQLError } = require('graphql')
+const jwt = require('jsonwebtoken')
 
 const Author = require('./models/author')
 const Book = require('./models/book')
@@ -156,6 +157,24 @@ const resolvers = {
         })
       }
       return user
+    },
+    login: async (root, args) => {
+      const user = await User.findOne({username: args.username})
+      if(!user || args.password !== 'securePass123') {
+         throw new GraphQLError('Invalid user credentials', {
+          extensions: {
+            code: 'BAD_USER_INPUT',
+            error
+          }
+        })
+      }
+
+      const userForToken = {
+        username: user.username,
+        id: user._id
+      } 
+
+      return { value: jwt.sign(userForToken, process.env.JWT_SECRET) }
     }
   }
 }
