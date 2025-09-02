@@ -2,25 +2,9 @@ const { GraphQLError } = require('graphql')
 
 const Author = require('./models/author')
 const Book = require('./models/book')
+const User = require('./models/user')
 
 const typeDefs = `
-  type Query {
-    bookCount: Int!,
-    authorCount: Int!,
-    allBooks(author: String, genre: String): [Book],
-    allAuthors: [Author!],
-  }
-
-  type Mutation {
-    addBook(
-      title: String!, 
-      author: String!, 
-      published: Int, 
-      genres: [String!]
-    ): Book, 
-    editAuthor(name: String!, setBornTo: Int): Author
-  }
-
   type Author {
     name: String!
     id: ID!
@@ -34,6 +18,42 @@ const typeDefs = `
     author: Author!
     id: ID!
     genres: [String!]
+  }
+
+  type User {
+    username: String!
+    favoriteGenre: String!
+    id: ID!
+  }
+
+  type Token {
+    value: String!
+  }
+
+  type Query {
+    bookCount: Int!,
+    authorCount: Int!,
+    allBooks(author: String, genre: String): [Book],
+    allAuthors: [Author!],
+    me: User
+  }
+
+  type Mutation {
+    addBook(
+      title: String!, 
+      author: String!, 
+      published: Int, 
+      genres: [String!]
+    ): Book, 
+    editAuthor(name: String!, setBornTo: Int): Author,
+    createUser(
+      username: String!
+      favoriteGenre: String!
+    ): User
+    login(
+      username: String!
+      password: String!
+    ): Token
   }
 `
 
@@ -121,6 +141,21 @@ const resolvers = {
       }
 
       return author
+    },
+    createUser: async (root, args) => {
+      const user = new User({...args})
+      try {
+        await user.save()
+      } catch (error) {
+        throw new GraphQLError('Could not create user', {
+          extensions: {
+            code: 'BAD_USER_INPUT',
+            invalidArgs: [args.username],
+            error
+          }
+        })
+      }
+      return user
     }
   }
 }
