@@ -1,6 +1,7 @@
+const { GraphQLError } = require('graphql')
+
 const Author = require('./models/author')
 const Book = require('./models/book')
-
 
 const typeDefs = `
   type Query {
@@ -73,7 +74,17 @@ const resolvers = {
 
       if (!author) {
         author = new Author({name: args.author})
-        await author.save()
+        try {
+          await author.save()
+        } catch (error) {
+          throw new GraphQLError('Could not create new book', {
+          extensions: {
+            code: 'BAD_USER_INPUT',
+            argumentName: "author",
+            error
+          }
+        })
+        }
       }
       
       const book = new Book({ ...args, author: author._id })
@@ -84,7 +95,7 @@ const resolvers = {
         throw new GraphQLError('Could not create new book', {
           extensions: {
             code: 'BAD_USER_INPUT',
-            invalidArgs: args.name,
+            argumentName: "title",
             error
           }
         })
