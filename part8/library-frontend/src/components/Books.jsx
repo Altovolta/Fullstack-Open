@@ -6,22 +6,31 @@ const Books = (props) => {
 
   const [filter, setFilter] = useState('all genres')
 
-  const result = useQuery(ALL_BOOKS)
+  const allBooksResult = useQuery(ALL_BOOKS)
+  const booksResult = useQuery(ALL_BOOKS, {
+    variables: {genre: filter },
+    skip: filter === 'all genres'
+  })
+
   if (!props.show) {
     return null
   }
 
-  if (result.loading) {
-    return (<div> Is loading...</div>)
+  if (booksResult.loading || allBooksResult.loading) {
+    return (<div> Loading books...</div>)
   }
 
+  // const filteredBooks = booksResult.data.allBooks
+  const allBooks = allBooksResult.data.allBooks
 
-  const books = result.data.allBooks
+  const shownBooks = filter === 'all genres' 
+  ? allBooks
+  : booksResult.data.allBooks
 
   const getGenres = () => {
     const genres = new Set()
 
-      books.forEach(book => {
+      allBooks.forEach(book => {
         genres.add(...book.genres)
       })
 
@@ -30,10 +39,6 @@ const Books = (props) => {
     }
 
   const uniqueGenres = getGenres()
-
-  const filteredBooks = books.filter(book => 
-    filter === 'all genres' || book.genres.includes(filter)
-  )
 
   return (
     <div>
@@ -55,7 +60,7 @@ const Books = (props) => {
             <th>author</th>
             <th>published</th>
           </tr>
-          {filteredBooks.map((a) => (
+          {shownBooks.map((a) => (
             <tr key={a.title}>
               <td>{a.title}</td>
               <td>{a.author.name}</td>

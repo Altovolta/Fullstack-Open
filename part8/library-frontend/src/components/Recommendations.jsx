@@ -3,8 +3,7 @@ import { ALL_BOOKS } from "../queries"
 
 
 const Recomendations = ({ show, genre }) => {
-  console.log(genre)
-
+  
   const booksResult = useQuery(ALL_BOOKS, {
     variables: { genre }
   })
