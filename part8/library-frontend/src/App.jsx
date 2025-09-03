@@ -3,12 +3,16 @@ import Authors from "./components/Authors";
 import Books from "./components/Books";
 import NewBook from "./components/NewBook";
 import Login from "./components/Login";
-import { useApolloClient } from "@apollo/client/react";
+import { useApolloClient, useQuery } from "@apollo/client/react";
+import Recomendations from "./components/Recommendations";
+import { GET_USER_INFO } from "./queries";
 
 const App = () => {
   const [page, setPage] = useState("authors");
   const [token, setToken] = useState(null)
   const client = useApolloClient()
+
+  const userInfoResult = useQuery(GET_USER_INFO)
 
   useEffect(() => {
     const storageToken = window.localStorage.getItem('token')
@@ -22,6 +26,12 @@ const App = () => {
     setToken(null)
     client.clearStore()
   }
+
+  if (userInfoResult.loading) {
+    return <div>Loading ...</div>
+  }
+
+  const userInfo = userInfoResult.data.me
 
   if( !token ) {
     return (
@@ -50,6 +60,7 @@ const App = () => {
         <button onClick={() => setPage("authors")}>authors</button>
         <button onClick={() => setPage("books")}>books</button>
         <button onClick={() => setPage("add")}>add book</button> 
+        <button onClick={() => setPage("recommend")}>recommend</button> 
         <button onClick={logout}>logout</button>
       </div>
 
@@ -61,6 +72,10 @@ const App = () => {
       <Authors show={page === "authors"} user={token} />
       <Books show={page === "books"} />
       <NewBook show={page === "add"} />
+      <Recomendations 
+        show={page === "recommend"} 
+        genre={userInfo.favoriteGenre}
+      />
     </div>
   );
 };
