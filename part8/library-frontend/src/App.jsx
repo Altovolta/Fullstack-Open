@@ -23,11 +23,23 @@ const App = () => {
     client.clearStore()
   }
 
-  const showLoggedFeatures = () => {
+  if( !token ) {
     return (
       <>
-      <button onClick={() => setPage("add")}>add book</button> 
-      <button onClick={logout}>logout</button>
+        <div>
+          <button onClick={() => setPage("authors")}>authors</button>
+          <button onClick={() => setPage("books")}>books</button>
+          <button onClick={() => setPage("login")}>login</button> 
+        </div>
+        <div>
+          <Login 
+            show={page === "login"} 
+            setToken={setToken} 
+            setPage={setPage}
+          />
+          <Authors show={page === "authors"} user={token} />
+          <Books show={page === "books"} />
+        </div>
       </>
     )
   }
@@ -37,10 +49,8 @@ const App = () => {
       <div>
         <button onClick={() => setPage("authors")}>authors</button>
         <button onClick={() => setPage("books")}>books</button>
-        {!token 
-        ? <button onClick={() => setPage("login")}>login</button> 
-        : showLoggedFeatures()
-        }
+        <button onClick={() => setPage("add")}>add book</button> 
+        <button onClick={logout}>logout</button>
       </div>
 
       <Login 
