@@ -27,8 +27,8 @@ const App = () => {
     client.clearStore()
   }
 
-  if (userInfoResult.loading) {
-    return <div>Loading ...</div>
+  if (userInfoResult.loading || ! userInfoResult.data.me) {
+    return <div> Loading ...</div>
   }
 
   const userInfo = userInfoResult.data.me
