@@ -35,6 +35,33 @@ const Authors = (props) => {
     return (<div> Is loading...</div>)
   }
 
+  const editBirthYear = () => {
+    return (
+      <>
+      <h2>Set birthyear</h2>
+      <form onSubmit={changeYear}>
+        <Select 
+          onChange={setSelectedOption}
+          options={options}
+          isSearchable={true}
+          noOptionsMessage="No authors found"
+        />
+        <div>
+          born 
+          <input 
+            type='number' 
+            value={birthYear} 
+            onChange={({ target }) => setBirthYear(target.value)}
+          />
+        </div>
+        <button type="submit">
+          update author
+        </button>
+      </form>
+      </>
+    )
+  }
+
   const authors = result.data.allAuthors
 
   const options = []
@@ -64,26 +91,7 @@ const Authors = (props) => {
           ))}
         </tbody>
       </table>
-      <h2>Set birthyear</h2>
-      <form onSubmit={changeYear}>
-        <Select 
-          onChange={setSelectedOption}
-          options={options}
-          isSearchable={true}
-          noOptionsMessage="No authors found"
-        />
-        <div>
-          born 
-          <input 
-            type='number' 
-            value={birthYear} 
-            onChange={({ target }) => setBirthYear(target.value)}
-          />
-        </div>
-        <button type="submit">
-          update author
-        </button>
-      </form>
+      {!props.user ? null : editBirthYear()}
     </div>
   )
 }
