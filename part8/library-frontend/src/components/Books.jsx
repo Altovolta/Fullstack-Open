@@ -20,7 +20,6 @@ const Books = (props) => {
     return (<div> Loading books...</div>)
   }
 
-  // const filteredBooks = booksResult.data.allBooks
   const allBooks = allBooksResult.data.allBooks
 
   const shownBooks = filter === 'all genres' 
@@ -28,15 +27,10 @@ const Books = (props) => {
   : booksResult.data.allBooks
 
   const getGenres = () => {
-    const genres = new Set()
-
-      allBooks.forEach(book => {
-        genres.add(...book.genres)
-      })
-
-      genres.add('all genres')
-      return Array.from(genres)
-    }
+    const allGenres = allBooks.flatMap(book => book.genres)
+    const genres = new Set([...allGenres, 'all genres'])
+    return Array.from(genres)
+  }
 
   const uniqueGenres = getGenres()
 
