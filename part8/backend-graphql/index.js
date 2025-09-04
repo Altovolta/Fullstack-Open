@@ -9,7 +9,8 @@ const http = require('http')
 const { WebSocketServer } = require('ws')
 const { useServer } = require('graphql-ws/use/ws')
 
-const { typeDefs, resolvers } = require('./graphql')
+const { typeDefs } = require('./graphql/schema')
+const { resolvers } = require('./graphql/resolvers')
 
 const jwt = require('jsonwebtoken')
 const User = require('./models/user')
