@@ -54,21 +54,11 @@ const resolvers = {
 
       if (!author) {
         author = new Author({name: args.author})
-        try {
-          await author.save()
-        } catch (error) {
-          throw new GraphQLError('Could not create new book', {
-          extensions: {
-            code: 'BAD_USER_INPUT',
-            argumentName: "author",
-            error
-          }
-        })
-        }
       }
       
       const book = new Book({ ...args, author: author._id })
       try {
+        await author.save()
         await book.save()
         await book.populate('author')
         pubsub.publish('BOOK_ADDED', {bookAdded: book})

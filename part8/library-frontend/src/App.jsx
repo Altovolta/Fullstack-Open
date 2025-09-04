@@ -3,15 +3,24 @@ import Authors from "./components/Authors";
 import Books from "./components/Books";
 import NewBook from "./components/NewBook";
 import Login from "./components/Login";
-import { useApolloClient, useQuery } from "@apollo/client/react";
+import { useApolloClient, useQuery, useSubscription } from "@apollo/client/react";
 import Recomendations from "./components/Recommendations";
-import { GET_USER_INFO } from "./queries";
+import { BOOK_ADDED, GET_USER_INFO, ALL_BOOKS } from "./queries";
+import { updateBooksCache } from "./helpers/updateCache";
 
 const App = () => {
   const [page, setPage] = useState("authors");
   const [token, setToken] = useState(null)
   const client = useApolloClient()
 
+  useSubscription(BOOK_ADDED, {
+    onData: ({ data, client}) => {
+      const addedBook = data.data.bookAdded
+      window.alert(`Book ${addedBook.title} added`)
+      updateBooksCache(client.cache, { query: ALL_BOOKS }, addedBook)
+    }
+  })
+  
   const userInfoResult = useQuery(GET_USER_INFO)
 
   useEffect(() => {
