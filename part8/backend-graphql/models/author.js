@@ -13,6 +13,10 @@ const schema = new mongoose.Schema({
     type: Number,
     default: null
   },
+  books: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Author'
+  }]
 })
 
 schema.plugin(uniqueValidator)
