@@ -1,9 +1,12 @@
-const { GraphQLError } = require('graphql')
+const { GraphQLError, subscribe } = require('graphql')
 const jwt = require('jsonwebtoken')
-
 const Author = require('./models/author')
 const Book = require('./models/book')
 const User = require('./models/user')
+
+const { PubSub } = require('graphql-subscriptions')
+const pubsub = new PubSub()
+
 
 const typeDefs = `
   type Author {
@@ -55,6 +58,10 @@ const typeDefs = `
       username: String!
       password: String!
     ): Token
+  }
+  
+  type Subscription {
+    bookAdded: Book!
   }
 `
 
@@ -121,6 +128,7 @@ const resolvers = {
       try {
         await book.save()
         await book.populate('author')
+        pubsub.publish('BOOK_ADDED', {bookAdded: book})
       } catch (error) {
         throw new GraphQLError('Could not create new book', {
           extensions: {
@@ -130,6 +138,7 @@ const resolvers = {
           }
         })
       }
+
       return book
     },
     editAuthor: async (root, args, { currentUser }) => {
@@ -193,6 +202,11 @@ const resolvers = {
       } 
 
       return { value: jwt.sign(userForToken, process.env.JWT_SECRET) }
+    }
+  },
+  Subscription: {
+    bookAdded: {
+      subscribe: () => pubsub.asyncIterableIterator('BOOK_ADDED') 
     }
   }
 }
