@@ -1,14 +1,12 @@
+import { isNumber } from "./utils"
+
 interface BmiInformation {
     height: number,
     weight: number 
 }
 
 const INVALID_ARGS = "Invalid number of arguments. Should be <height> <weight>"
-const INVALID_ARGS_TYPE = "Inpust shoul be numbers"
-
-const isNumber = (arg: string): boolean => {
-    return !isNaN(Number(arg))
-} 
+const INVALID_ARGS_TYPE = "Inputs should be numbers"
 
 const parseArgs = (argv: string[]): BmiInformation => {
 

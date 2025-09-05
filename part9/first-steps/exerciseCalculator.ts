@@ -1,3 +1,7 @@
+import { isNumber } from "./utils"
+
+const INVALID_ARGS_TYPE = "Inputs should be numbers"
+
 interface ExerciseReport {
     periodLength: number,
     trainingDays: number,
@@ -8,9 +12,29 @@ interface ExerciseReport {
     average: number,
 }
 
-const calculateExercises = (dialyExerciseHours: number[], target: number): ExerciseReport => {
+interface ExerciseArguments {
+    target: number,
+    dialyExerciseHours: number[]
+}
 
-    let report: ExerciseReport;
+const parseArgs = (argv: string[]): ExerciseArguments => {
+
+    if (argv.length < 4 ) { throw new Error("Invalid number of arguments") }
+
+    if (!isNumber(argv[2])) {throw new Error("Invalid target")}
+    const target =  Number(argv[2])
+
+    const dialyExerciseHours: number[] = []
+    for(let i = 3; i < argv.length; i++ ) {
+        if (!isNumber(argv[i])) {throw new Error(INVALID_ARGS_TYPE)}
+        dialyExerciseHours.push(Number(argv[i]))
+    }
+
+    return { target, dialyExerciseHours }
+}
+
+
+const calculateExercises = (dialyExerciseHours: number[], target: number): ExerciseReport => {
 
     const periodLength = dialyExerciseHours.length
     const trainingDays = dialyExerciseHours.filter(h => h !== 0).length
@@ -19,7 +43,7 @@ const calculateExercises = (dialyExerciseHours: number[], target: number): Exerc
     )
 
     const average = totalHours / periodLength
-    const success = average < target
+    const success = average > target
 
     const margin = average - target
     let rating;
@@ -49,4 +73,12 @@ const calculateExercises = (dialyExerciseHours: number[], target: number): Exerc
     }
 }
 
-console.log(calculateExercises([3, 0, 2, 4.5, 0, 3, 1], 2))
+
+try {
+    const { target, dialyExerciseHours } = parseArgs(process.argv)
+    console.log(calculateExercises(dialyExerciseHours, target))
+} catch (error: unknown) {
+    if (error instanceof Error) {
+        console.log("Error: " + error.message)
+    }  
+}
