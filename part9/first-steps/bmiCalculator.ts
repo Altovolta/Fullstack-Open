@@ -1,3 +1,30 @@
+interface BmiInformation {
+    height: number,
+    weight: number 
+}
+
+const INVALID_ARGS = "Invalid number of arguments. Should be <height> <weight>"
+const INVALID_ARGS_TYPE = "Inpust shoul be numbers"
+
+const isNumber = (arg: string): boolean => {
+    return !isNaN(Number(arg))
+} 
+
+const parseArgs = (argv: string[]): BmiInformation => {
+
+    if (argv.length != 4) { throw new Error(INVALID_ARGS) }
+
+    if(!isNumber(argv[2]) || !isNumber(argv[3])) {
+        throw new Error(INVALID_ARGS_TYPE)
+    }
+
+    const height = Number(argv[2])
+    const weight = Number(argv[3])
+
+    return { height, weight }
+}
+
+
 const calculateBmi = (height: number, weight:number): string => {
 
     const bmi: number =  weight / ((height / 100) ** 2)
@@ -16,4 +43,12 @@ const calculateBmi = (height: number, weight:number): string => {
 
 }
 
-console.log(calculateBmi(180, 74))
+try {
+    const { height, weight } = parseArgs(process.argv)
+    console.log(calculateBmi(height, weight))
+} catch (error: unknown) {
+    if (error instanceof Error) {
+        console.log("Error: " + error.message)
+    }
+    
+}
