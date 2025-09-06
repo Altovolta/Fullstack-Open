@@ -23,7 +23,7 @@ const parseArgs = (argv: string[]): BmiInformation => {
 }
 
 
-const calculateBmi = (height: number, weight:number): string => {
+export const calculateBmi = (height:number, weight:number): string => {
 
     const bmi: number =  weight / ((height / 100) ** 2)
 
@@ -41,12 +41,14 @@ const calculateBmi = (height: number, weight:number): string => {
 
 }
 
-try {
-    const { height, weight } = parseArgs(process.argv)
-    console.log(calculateBmi(height, weight))
-} catch (error: unknown) {
-    if (error instanceof Error) {
-        console.log("Error: " + error.message)
+if (require.main === module) {
+    try {
+        const { height, weight } = parseArgs(process.argv)
+        console.log(calculateBmi(height, weight))
+    } catch (error: unknown) {
+        if (error instanceof Error) {
+            console.log("Error: " + error.message)
+        }
+        
     }
-    
 }
