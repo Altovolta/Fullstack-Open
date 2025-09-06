@@ -34,7 +34,7 @@ const parseArgs = (argv: string[]): ExerciseArguments => {
 };
 
 
-const calculateExercises = (dialyExerciseHours: number[], target: number): ExerciseReport => {
+export const calculateExercises = (dialyExerciseHours: number[], target: number): ExerciseReport => {
 
     const periodLength = dialyExerciseHours.length;
     const trainingDays = dialyExerciseHours.filter(h => h !== 0).length;
@@ -73,12 +73,13 @@ const calculateExercises = (dialyExerciseHours: number[], target: number): Exerc
     };
 };
 
-
-try {
-    const { target, dialyExerciseHours } = parseArgs(process.argv);
-    console.log(calculateExercises(dialyExerciseHours, target));
-} catch (error: unknown) {
-    if (error instanceof Error) {
-        console.log("Error: " + error.message);
-    }  
+if (require.main === module) {
+    try {
+        const { target, dialyExerciseHours } = parseArgs(process.argv);
+        console.log(calculateExercises(dialyExerciseHours, target));
+    } catch (error: unknown) {
+        if (error instanceof Error) {
+            console.log("Error: " + error.message);
+        }  
+    }
 }
