@@ -1,13 +1,18 @@
 import express, { Router, Response } from 'express';
 import patientService from '../services/patientService';
-import { NonSensitivePatient } from '../types';
+import { NonSensitivePatient, Patient } from '../types';
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
 const router: Router = express.Router();
 
 router.get('/', (_req, res: Response<NonSensitivePatient[]>) => {
   res.send(patientService.getNoSensitivePatients());
 });
 
+router.post('/', (req, res: Response<Patient>) => {
+
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+  res.send(patientService.createNewPatient(req.body));
+
+});
 
 export default router;

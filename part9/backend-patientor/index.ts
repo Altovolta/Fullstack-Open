@@ -3,13 +3,10 @@ import cors from 'cors';
 import diagnosisRouter from './routes/diagnosis';
 import patientRouter from './routes/patient';
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
 const app: Express = express();
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
 app.use(express.json());
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-call
 app.use(cors());
 
 const PORT = 3001;
