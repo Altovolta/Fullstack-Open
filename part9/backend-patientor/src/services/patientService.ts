@@ -1,6 +1,6 @@
 import { v1 as uuid } from 'uuid';
 import { NewPatient, NonSensitivePatient, Patient } from "../types";
-import patients from '../data/patients';
+import patients from '../../data/patients';
 
 
 const getNoSensitivePatients = (): NonSensitivePatient[] => {

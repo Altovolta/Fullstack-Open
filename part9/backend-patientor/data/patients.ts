@@ -1,4 +1,4 @@
-import { newPatientSchema, Patient } from "../types";
+import { Patient, newPatientSchema } from "../src/types";
 
 const data = [
     {
