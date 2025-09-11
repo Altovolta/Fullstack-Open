@@ -8,7 +8,7 @@ function App() {
 
   useEffect(() => {
     diaryService.getAll().then(data => setDiaries(data))
-  })
+  }, [])
 
 
   return (
