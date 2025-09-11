@@ -1,9 +1,11 @@
 import React, { useState, type JSX } from "react";
 import diaryService from "../services/diaryService";
 import type { CallbackFunction, NewDiaryEntry } from "../types";
+import axios from 'axios'
 
 interface NewDiaryFormProps {
   handleCreation: CallbackFunction
+  setNotification: React.Dispatch<React.SetStateAction<string>>
 }
 
 const NewDiaryForm = (props: NewDiaryFormProps): JSX.Element => {
@@ -21,9 +23,19 @@ const NewDiaryForm = (props: NewDiaryFormProps): JSX.Element => {
       weather,
       comment,
     }
-    const newDiary = await diaryService.create(newEntry)
 
-    props.handleCreation(newDiary)
+    try {
+      const newDiary = await diaryService.create(newEntry)
+      props.handleCreation(newDiary)
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        props.setNotification(error.response?.data)
+
+        setTimeout(() => {
+          props.setNotification('')
+        }, 5000 )
+      }
+    }
 
     setDate('')
     setWeather('')
@@ -40,6 +52,7 @@ const NewDiaryForm = (props: NewDiaryFormProps): JSX.Element => {
         date: 
         <input 
           type="text"
+          value={date}
           onChange={({target}) => setDate(target.value)}
         />
       </div>
@@ -47,6 +60,7 @@ const NewDiaryForm = (props: NewDiaryFormProps): JSX.Element => {
         visibility: 
         <input 
           type="text"
+          value={visibility}
           onChange={({target}) => setVisibility(target.value)}
         />
       </div>
@@ -54,6 +68,7 @@ const NewDiaryForm = (props: NewDiaryFormProps): JSX.Element => {
         weather: 
         <input 
           type="text"
+          value={weather}
           onChange={({target}) => setWeather(target.value)}
         />
       </div>
@@ -61,6 +76,7 @@ const NewDiaryForm = (props: NewDiaryFormProps): JSX.Element => {
         comment: 
         <input 
           type="text"
+          value={comment}
           onChange={({target}) => setComment(target.value)}
         />
       </div>
