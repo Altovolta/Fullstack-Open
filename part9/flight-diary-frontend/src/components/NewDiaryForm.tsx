@@ -27,7 +27,7 @@ const NewDiaryForm = (props: NewDiaryFormProps): JSX.Element => {
     try {
       const newDiary = await diaryService.create(newEntry)
       props.handleCreation(newDiary)
-    } catch (error) {
+    } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
         props.setNotification(error.response?.data)
 
@@ -51,26 +51,83 @@ const NewDiaryForm = (props: NewDiaryFormProps): JSX.Element => {
       <div>
         date: 
         <input 
-          type="text"
+          type="date"
           value={date}
+          max={new Date().toISOString().split("T")[0]}
           onChange={({target}) => setDate(target.value)}
         />
       </div>
+        <div>
+          visibility: 
+          <input 
+            type="radio"
+            id="greatVisibility"
+            name="visibility"
+            value="great"
+            onChange={({target}) => setVisibility(target.value)}
+          />
+          <label>great</label>
+
+          <input 
+            type="radio"
+            id="goodVisibility"
+            name="visibility"
+            value="good"
+            onChange={({target}) => setVisibility(target.value)}
+          />
+          <label>good</label>
+
+          <input 
+            type="radio"
+            id="okVisibility"
+            name="visibility"
+            value="ok"
+            onChange={({target}) => setVisibility(target.value)}
+          />
+          <label>ok</label>
+        </div>
       <div>
-        visibility: 
+        weather:
         <input 
-          type="text"
-          value={visibility}
-          onChange={({target}) => setVisibility(target.value)}
-        />
-      </div>
-      <div>
-        weather: 
-        <input 
-          type="text"
-          value={weather}
-          onChange={({target}) => setWeather(target.value)}
-        />
+            type="radio"
+            id="sunnyWeather"
+            name="weather"
+            value="sunny"
+            onChange={({target}) => setWeather(target.value)}
+          />
+          <label>sunny</label> 
+          <input 
+            type="radio"
+            id="rainyWeather"
+            name="weather"
+            value="rainy"
+            onChange={({target}) => setWeather(target.value)}
+          />
+          <label>rainy</label> 
+          <input 
+            type="radio"
+            id="cloudyWeather"
+            name="weather"
+            value="cloudy"
+            onChange={({target}) => setWeather(target.value)}
+          />
+          <label>cloudy</label> 
+          <input 
+            type="radio"
+            id="stormyWeather"
+            name="weather"
+            value="stormy"
+            onChange={({target}) => setWeather(target.value)}
+          />
+          <label>stormy</label> 
+          <input 
+            type="radio"
+            id="windyWeather"
+            name="weather"
+            value="windy"
+            onChange={({target}) => setWeather(target.value)}
+          />
+          <label>windy</label> 
       </div>
       <div>
         comment: 
