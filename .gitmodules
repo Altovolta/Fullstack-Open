@@ -1,3 +1,6 @@
 [submodule "part3/phonebook-backend"]
 	path = part3/phonebook-backend
 	url = https://github.com/Altovolta/phonebook-backend
+[submodule "part9/flight-diary"]
+	path = part9/flight-diary
+	url = https://github.com/fullstack-hy2020/flight-diary
