@@ -16,6 +16,18 @@ router.post('/', newPatientParser, (req: Request<unknown, unknown, NewPatient>, 
   res.json(patient);
 });
 
+router.get('/:id', (req, res) => {
+  const id = req.params.id;
+  const patient = patientService.findPatient(id);
+
+  if (patient) {
+    res.send(patient);
+  } else {
+    res.status(404).send({error: "Patient not found"});
+  }
+  
+}); 
+
 router.use(errorMiddleware);
 
 export default router;
