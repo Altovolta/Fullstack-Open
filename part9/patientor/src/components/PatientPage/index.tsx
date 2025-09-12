@@ -5,19 +5,32 @@ import { Box, Typography } from "@mui/material";
 import FemaleIcon from '@mui/icons-material/Female';
 import MaleIcon from '@mui/icons-material/Male';
 
-import {Patient } from "../../types";
+import { Diagnosis, Patient } from "../../types";
 import patientService from '../../services/patients';
+import diagnosisService from '../../services/diagnosis';
+
 import EntryComponent from "./EntryComponent";
 
 
 const PatientPage = () => {
   const id = useParams().id;
   const [patient, setPatient] = useState<Patient>();
+  const [diagnosisCodes, setDiagnosisCodes] = useState<Diagnosis[]>();
 
   useEffect(() => {
-    patientService.getOne(id).then(
-      data => setPatient(data)
-    );
+    const fetchPatientData =  async () => {
+      const patient = await patientService.getOne(id);
+       setPatient(patient);
+    };
+
+    const fetchDiagnosisCodes =  async () => {
+      const codes = await diagnosisService.getAll();
+      setDiagnosisCodes(codes);
+    };
+
+    void fetchPatientData();
+    void fetchDiagnosisCodes();
+
   }, [id]);
 
   return (
@@ -44,7 +57,7 @@ const PatientPage = () => {
       <Box>
         <Typography variant='h4'>Entries</Typography>
         {patient?.entries.map(entry => 
-          <EntryComponent key={entry.id} entry={entry} />
+          <EntryComponent key={entry.id} entry={entry} diagnosisCodes={diagnosisCodes}/>
         )}
       </Box>
 

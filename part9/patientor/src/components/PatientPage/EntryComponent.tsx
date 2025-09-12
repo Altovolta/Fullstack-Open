@@ -1,12 +1,13 @@
-import { Entry } from "../../types";
+import { Diagnosis, Entry } from "../../types";
 import { Box, List, ListItem, Typography } from "@mui/material";
 
 
 interface Props {
-  entry: Entry
+  entry: Entry,
+  diagnosisCodes: Diagnosis[] | undefined
 }
 
-const EntryComponent = ({ entry }: Props) => {
+const EntryComponent = ({ entry, diagnosisCodes }: Props) => {
 
   console.log(entry);
 
@@ -22,7 +23,7 @@ const EntryComponent = ({ entry }: Props) => {
       <List>
         {entry.diagnosisCodes?.map(code => 
         <ListItem key={code}>
-          {code}
+          {code} - {diagnosisCodes?.find(diagnosisCode => diagnosisCode.code === code)?.name}
         </ListItem>
         )}
       </List>
