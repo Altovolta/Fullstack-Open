@@ -7,6 +7,7 @@ import MaleIcon from '@mui/icons-material/Male';
 
 import {Patient } from "../../types";
 import patientService from '../../services/patients';
+import EntryComponent from "./EntryComponent";
 
 
 const PatientPage = () => {
@@ -36,9 +37,17 @@ const PatientPage = () => {
           Occupation: {patient?.occupation}
         </Typography>
         <Typography variant='h6'>
-          Date of birth: {patient?.dateOfBirth}
+          Birthday: {patient?.dateOfBirth}
         </Typography>
       </Box>
+      <br />
+      <Box>
+        <Typography variant='h4'>Entries</Typography>
+        {patient?.entries.map(entry => 
+          <EntryComponent key={entry.id} entry={entry} />
+        )}
+      </Box>
+
     </div>
   );
 };
