@@ -32,11 +32,9 @@ const findPatient = (id: string): Patient | undefined => {
 const createNewEntry = (newEntry: NewEntry, patientId: string) => {
 
   const patient = findPatient(patientId);
-  
   if (!patient) {
     throw new Error('Patient not found');
   }
-
   
   const entry = {
     id: uuid(),

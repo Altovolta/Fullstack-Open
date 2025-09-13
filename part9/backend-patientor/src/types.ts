@@ -57,12 +57,16 @@ export const EntrySchema = z.discriminatedUnion("type", [
   OccupationalHealthcareEntrySchema,
   HealthCheckEntrySchema
 ]);
-
 export type Entry = z.infer<typeof EntrySchema>;
 
-type UnionOmit<T, K extends string | number | symbol> = T extends unknown ? Omit<T, K> : never;
-// Define Entry without the 'id' property
-export type NewEntry = UnionOmit<Entry, 'id'>;
+
+export const newEntrySchema = z.discriminatedUnion("type", [
+  HospitalEntrySchema.omit({"id": true}),
+  OccupationalHealthcareEntrySchema.omit({"id": true}),
+  HealthCheckEntrySchema.omit({"id": true})
+]);
+
+export type NewEntry = z.infer<typeof newEntrySchema>;
 
 
 export const newPatientSchema = z.object({

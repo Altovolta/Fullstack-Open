@@ -3,6 +3,7 @@ import patientService from '../services/patientService';
 import { NewEntry, NewPatient, NonSensitivePatient, Patient } from '../types';
 import { newPatientParser } from '../middleware/newPatientParser';
 import { errorMiddleware } from '../middleware/errorMiddleware';
+import { newEntryParser } from '../middleware/newEntryParser';
 
 const router: Router = express.Router();
 
@@ -11,7 +12,6 @@ router.get('/', (_req, res: Response<NonSensitivePatient[]>) => {
 });
 
 router.post('/', newPatientParser, (req: Request<unknown, unknown, NewPatient>, res: Response<Patient>) => {
-
   const patient = patientService.createNewPatient(req.body);
   res.json(patient);
 });
@@ -28,7 +28,7 @@ router.get('/:id', (req, res) => {
   
 }); 
 
-router.post('/:id/entries', (req: Request<{ id: string }, unknown, NewEntry>, res) => {
+router.post('/:id/entries', newEntryParser, (req: Request<{ id: string }, unknown, NewEntry>, res) => {
 
   const id = req.params.id;
   try {
