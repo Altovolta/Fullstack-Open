@@ -1,6 +1,6 @@
 import { Box, Button, MenuItem, Select, SelectChangeEvent, TextField, Typography } from "@mui/material";
 import { useState } from "react";
-import { Diagnosis, NewEntryFormValues } from "../../../types";
+import { Diagnosis, HealthCheckRating, NewEntryFormValues } from "../../../types";
 
 
 interface Props {
@@ -8,13 +8,25 @@ interface Props {
   allDiagnosisCodes: Diagnosis[]
 }
 
+interface RatingOptions {
+  value: string | HealthCheckRating;
+  label: string;
+}
+
+const ratingOptions: RatingOptions[] = Object.entries(HealthCheckRating)
+  .filter(([key, _]) => isNaN(Number(key)))
+  .map(([k, v]) => {
+    return {value: v, label: k.toString()};
+  });
+
+
 const HealthCheckEntryForm = ({ sumbitNewEntry, allDiagnosisCodes }: Props) => {
   
   const [description, setDescription] = useState<string>('');
   const [date, setDate] = useState<string>('');
   const [specialist, setSpecialist] = useState<string>('');
   const [diagnosticCodes, setDiagnosticCodes] = useState<string[]>([]);
-  const [healthCheckRating, setHealthCheckRating] = useState<string>('');
+  const [healthCheckRating, setHealthCheckRating] = useState<number>(0);
 
   const onSubmit = async (event: React.SyntheticEvent) => {
     event.preventDefault();
@@ -32,7 +44,7 @@ const HealthCheckEntryForm = ({ sumbitNewEntry, allDiagnosisCodes }: Props) => {
     setDate('');
     setSpecialist('');
     setDiagnosticCodes([]);
-    setHealthCheckRating('');
+    setHealthCheckRating(0);
   };
 
   const handleChange = (event: SelectChangeEvent<typeof diagnosticCodes>) => {
@@ -40,6 +52,11 @@ const HealthCheckEntryForm = ({ sumbitNewEntry, allDiagnosisCodes }: Props) => {
     setDiagnosticCodes(
       typeof value === 'string' ? value.split(',') : value
     );
+  };
+
+    const handleRatingChange = (event: SelectChangeEvent<string>) => {
+      const value = event.target.value;
+      setHealthCheckRating(Number(value));
   };
 
   return (
@@ -92,12 +109,22 @@ const HealthCheckEntryForm = ({ sumbitNewEntry, allDiagnosisCodes }: Props) => {
               )
             }
           </Select>
-          <TextField 
-            label="Healthcheck Rating"
-            type="number"
-            value={healthCheckRating}
-            onChange={ ({ target }) => setHealthCheckRating(target.value) }
-          />
+          <Select
+          displayEmpty
+          value={healthCheckRating.toString()}
+          onChange={handleRatingChange}
+          >
+            {
+              ratingOptions.map(rating => 
+                <MenuItem
+                key={rating.label}
+                value={rating.value}
+                >
+                  {rating.label}
+                </MenuItem>
+              )
+            }
+          </Select>
           <Button
           type="submit"
           variant="contained"
