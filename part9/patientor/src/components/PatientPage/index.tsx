@@ -15,8 +15,8 @@ import OccupationalHealthcareComponent from "./OccupationalHealthcareComponent";
 import HealthCheckComponent from "./HealthcheckEntryComponent";
 import { assertNever } from "../../utils";
 
-import HealthCheckEntryForm from "./HealtcheckEntryForm";
 import Notification from "../Notifications";
+import EntryFormSelector from "./EntryFormSelector";
 
 
 const PatientPage = () => {
@@ -115,7 +115,8 @@ const PatientPage = () => {
         </Typography>
       </Box>
       <br />
-      <HealthCheckEntryForm sumbitNewEntry={submitNewEntry}/>
+      <EntryFormSelector submitNewEntry={submitNewEntry}/>
+      
       <Box>
         <Typography variant='h4'>Entries</Typography>
         {patient?.entries.map(entry => createEntryComponent(entry))}

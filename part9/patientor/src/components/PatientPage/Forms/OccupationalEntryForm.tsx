@@ -1,19 +1,21 @@
 import { Box, Button, TextField, Typography } from "@mui/material";
 import { useState } from "react";
-import { NewEntryFormValues } from "../../types";
+import { NewEntryFormValues } from "../../../types";
 
 
 interface Props {
   sumbitNewEntry: (newEntry: NewEntryFormValues) => Promise<void>
 }
 
-const HealthCheckEntryForm = ({ sumbitNewEntry }: Props) => {
+const OccupationalHealthcareEntryForm = ({ sumbitNewEntry }: Props) => {
   
   const [description, setDescription] = useState<string>('');
   const [date, setDate] = useState<string>('');
   const [specialist, setSpecialist] = useState<string>('');
   const [diagnosticCodes, setDiagnosticCodes] = useState<string>('');
-  const [healthCheckRating, setHealthCheckRating] = useState<string>('');
+  const [employerName, setEmployerName] = useState<string>('');
+  const [startDate, setStartDate] = useState<string>('');
+  const [endDate, setEndDate] = useState<string>('');
 
   const onSubmit = async (event: React.SyntheticEvent) => {
     event.preventDefault();
@@ -22,8 +24,12 @@ const HealthCheckEntryForm = ({ sumbitNewEntry }: Props) => {
       date, 
       specialist,
       diagnosticCodes: diagnosticCodes.split(','),
-      healthCheckRating: Number(healthCheckRating),
-      type: "HealthCheck" as const
+      employerName,
+      sickLeave: {
+        startDate,
+        endDate
+      },
+      type: "OccupationalHealthcare" as const
     };
     await sumbitNewEntry(newEntry);
     
@@ -31,13 +37,14 @@ const HealthCheckEntryForm = ({ sumbitNewEntry }: Props) => {
     setDate('');
     setSpecialist('');
     setDiagnosticCodes('');
-    setHealthCheckRating('');
+    setStartDate('');
+    setEndDate('');
   };
 
   return (
     <Box sx={{ border: 1, borderColor: 'grey.400', padding: 2, margin: 1, borderRadius: 1 }}>
       <Typography variant='h5' fontWeight="bold">
-          New Healthcheck entry
+          New occupational healthcare entry
       </Typography>
       <br />
       <form onSubmit={onSubmit}>
@@ -59,15 +66,29 @@ const HealthCheckEntryForm = ({ sumbitNewEntry }: Props) => {
             onChange={ ({ target }) => setSpecialist(target.value) }
           />
           <TextField 
-            label="Healthcheck Rating"
-            type="number"
-            value={healthCheckRating}
-            onChange={ ({ target }) => setHealthCheckRating(target.value) }
-          />
-          <TextField 
             label="Diagnosis codes"
             value={diagnosticCodes}
             onChange={ ({ target }) => setDiagnosticCodes(target.value) }
+          />
+          <TextField 
+            label="Employer"
+            value={employerName}
+            onChange={ ({ target }) => setEmployerName(target.value) }
+          />
+          <Typography variant="subtitle1" fontWeight="bold">
+            Sick leave
+          </Typography>
+          <TextField 
+            label="Start"
+            placeholder="YYYY-MM-DD"
+            value={startDate}
+            onChange={ ({ target }) => setStartDate(target.value) }
+          />
+          <TextField 
+            label="End"
+            placeholder="YYYY-MM-DD"
+            value={endDate}
+            onChange={ ({ target }) => setEndDate(target.value) }
           />
           <Button
           type="submit"
@@ -82,4 +103,4 @@ const HealthCheckEntryForm = ({ sumbitNewEntry }: Props) => {
 
 };
 
-export default HealthCheckEntryForm;
+export default OccupationalHealthcareEntryForm;
