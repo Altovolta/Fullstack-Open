@@ -115,7 +115,10 @@ const PatientPage = () => {
         </Typography>
       </Box>
       <br />
-      <EntryFormSelector submitNewEntry={submitNewEntry}/>
+      <EntryFormSelector 
+      submitNewEntry={submitNewEntry}
+      diagnosisCodes={diagnosisCodes}
+      />
       
       <Box>
         <Typography variant='h4'>Entries</Typography>

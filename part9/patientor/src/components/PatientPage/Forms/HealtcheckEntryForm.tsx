@@ -1,18 +1,19 @@
-import { Box, Button, TextField, Typography } from "@mui/material";
+import { Box, Button, MenuItem, Select, SelectChangeEvent, TextField, Typography } from "@mui/material";
 import { useState } from "react";
-import { NewEntryFormValues } from "../../../types";
+import { Diagnosis, NewEntryFormValues } from "../../../types";
 
 
 interface Props {
-  sumbitNewEntry: (newEntry: NewEntryFormValues) => Promise<void>
+  sumbitNewEntry: (newEntry: NewEntryFormValues) => Promise<void>,
+  allDiagnosisCodes: Diagnosis[]
 }
 
-const HealthCheckEntryForm = ({ sumbitNewEntry }: Props) => {
+const HealthCheckEntryForm = ({ sumbitNewEntry, allDiagnosisCodes }: Props) => {
   
   const [description, setDescription] = useState<string>('');
   const [date, setDate] = useState<string>('');
   const [specialist, setSpecialist] = useState<string>('');
-  const [diagnosticCodes, setDiagnosticCodes] = useState<string>('');
+  const [diagnosticCodes, setDiagnosticCodes] = useState<string[]>([]);
   const [healthCheckRating, setHealthCheckRating] = useState<string>('');
 
   const onSubmit = async (event: React.SyntheticEvent) => {
@@ -21,7 +22,7 @@ const HealthCheckEntryForm = ({ sumbitNewEntry }: Props) => {
       description,
       date, 
       specialist,
-      diagnosticCodes: diagnosticCodes.split(','),
+      diagnosticCodes,
       healthCheckRating: Number(healthCheckRating),
       type: "HealthCheck" as const
     };
@@ -30,8 +31,15 @@ const HealthCheckEntryForm = ({ sumbitNewEntry }: Props) => {
     setDescription('');
     setDate('');
     setSpecialist('');
-    setDiagnosticCodes('');
+    setDiagnosticCodes([]);
     setHealthCheckRating('');
+  };
+
+  const handleChange = (event: SelectChangeEvent<typeof diagnosticCodes>) => {
+    const value = event.target.value;
+    setDiagnosticCodes(
+      typeof value === 'string' ? value.split(',') : value
+    );
   };
 
   return (
@@ -49,20 +57,41 @@ const HealthCheckEntryForm = ({ sumbitNewEntry }: Props) => {
           />
           <TextField 
             label="Date"
-            placeholder="YYYY-MM-DD"
+            type="date"
             value={date}
             onChange={ ({ target }) => setDate(target.value) }
+            InputLabelProps={{
+              shrink: true,
+            }}
           />
           <TextField 
             label="Specialist"
             value={specialist}
             onChange={ ({ target }) => setSpecialist(target.value) }
           />
-          <TextField 
-            label="Diagnosis codes"
-            value={diagnosticCodes}
-            onChange={ ({ target }) => setDiagnosticCodes(target.value) }
-          />
+          <Select
+          multiple
+          renderValue={(selected) => {
+            if (selected.length === 0) {
+              return "Diagnosis codes";
+            }
+            return selected.join(', ');
+          }}
+          displayEmpty
+          value={diagnosticCodes}
+          onChange={handleChange}
+          >
+            { 
+              allDiagnosisCodes.map(code => 
+                <MenuItem
+                key={code.code}
+                value={code.code}
+                >
+                  {code.code} - {code.name}
+                </MenuItem>
+              )
+            }
+          </Select>
           <TextField 
             label="Healthcheck Rating"
             type="number"

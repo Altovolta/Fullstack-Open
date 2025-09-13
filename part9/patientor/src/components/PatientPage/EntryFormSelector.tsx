@@ -1,5 +1,5 @@
 import { MenuItem, Select } from "@mui/material";
-import { EntryTypes, NewEntryFormValues } from "../../types";
+import { Diagnosis, EntryTypes, NewEntryFormValues } from "../../types";
 import { useState } from "react";
 import HealthCheckEntryForm from "./Forms/HealtcheckEntryForm";
 import HospitalEntryForm from "./Forms/HospitalEntryForm";
@@ -17,10 +17,11 @@ const entryOptions: EntryOptions[] = Object.values(EntryTypes).map(v => ({
 }));
 
 interface Props {
-  submitNewEntry: (newEntry: NewEntryFormValues) => Promise<void>
+  submitNewEntry: (newEntry: NewEntryFormValues) => Promise<void>,
+  diagnosisCodes: Diagnosis[]
 }
 
-const EntryFormSelector = ({ submitNewEntry }: Props) => {
+const EntryFormSelector = ({ submitNewEntry, diagnosisCodes }: Props) => {
 
   const [entryType, setEntryType] = useState<string>("Healthcheck");
 
@@ -29,11 +30,20 @@ const EntryFormSelector = ({ submitNewEntry }: Props) => {
     // TODO: Create generic form with the common values.
     switch (entryType) {
       case "Healthcheck":
-        return <HealthCheckEntryForm sumbitNewEntry={submitNewEntry}/>;
+        return <HealthCheckEntryForm 
+        sumbitNewEntry={submitNewEntry} 
+        allDiagnosisCodes={diagnosisCodes}
+        />;
       case "Occupational healthcare":
-        return <OccupationalHealthcareEntryForm sumbitNewEntry={submitNewEntry}/>;
+        return <OccupationalHealthcareEntryForm 
+        sumbitNewEntry={submitNewEntry}
+        allDiagnosisCodes={diagnosisCodes}
+        />;
       case "Hospital":
-        return <HospitalEntryForm sumbitNewEntry={submitNewEntry}/>;
+        return <HospitalEntryForm 
+        sumbitNewEntry={submitNewEntry}
+        allDiagnosisCodes={diagnosisCodes}
+        />;
       default:
         return null;
     }
