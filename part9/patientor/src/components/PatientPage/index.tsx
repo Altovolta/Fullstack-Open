@@ -1,11 +1,12 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { isAxiosError } from "axios";
 
 import { Box, Typography } from "@mui/material";
 import FemaleIcon from '@mui/icons-material/Female';
 import MaleIcon from '@mui/icons-material/Male';
 
-import { Diagnosis, Entry, Patient } from "../../types";
+import { Diagnosis, Entry, NewEntryFormValues, Patient } from "../../types";
 import patientService from '../../services/patients';
 import diagnosisService from '../../services/diagnosis';
 
@@ -14,11 +15,15 @@ import OccupationalHealthcareComponent from "./OccupationalHealthcareComponent";
 import HealthCheckComponent from "./HealthcheckEntryComponent";
 import { assertNever } from "../../utils";
 
+import HealthCheckEntryForm from "./HealtcheckEntryForm";
+import Notification from "../Notifications";
+
 
 const PatientPage = () => {
   const id = useParams().id;
   const [patient, setPatient] = useState<Patient>();
   const [diagnosisCodes, setDiagnosisCodes] = useState<Diagnosis[]>([]);
+  const [error, setError] = useState<string>('');
 
   useEffect(() => {
     const fetchPatientData =  async () => {
@@ -36,6 +41,7 @@ const PatientPage = () => {
 
   }, [id]);
 
+  if (!patient) {return null;}
 
   const createEntryComponent = (entry: Entry) => {
     switch (entry.type) {
@@ -62,8 +68,34 @@ const PatientPage = () => {
     }
   };
 
+  const submitNewEntry = async (newEntry: NewEntryFormValues) => {
+
+    try {
+      const entry = await patientService.createNewEntry(newEntry, patient?.id);
+      const updatedPatient = {
+        ...patient,
+        entries: patient.entries.concat(entry)
+      };
+      setPatient(updatedPatient);
+
+    } catch (error) {
+      if (isAxiosError(error)) {
+        console.log(error.response?.data.error[0].message);
+        setError(error.response?.data.error[0].message);
+      }
+      else {
+        setError("Unknown error");
+      }
+
+      setTimeout(() => {
+        setError('');
+      }, 5000);
+    }
+  };
+
   return (
     <div>
+      <Notification error={error} />
       <br />
       <Box>
         <Typography variant="h4" fontWeight="bold">
@@ -83,6 +115,7 @@ const PatientPage = () => {
         </Typography>
       </Box>
       <br />
+      <HealthCheckEntryForm sumbitNewEntry={submitNewEntry}/>
       <Box>
         <Typography variant='h4'>Entries</Typography>
         {patient?.entries.map(entry => createEntryComponent(entry))}

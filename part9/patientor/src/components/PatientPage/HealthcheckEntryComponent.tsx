@@ -12,16 +12,15 @@ interface Props {
 const HealthCheckComponent = ({ entry, diagnosisCodes }: Props) => {
 
   const getRatingIcon = (rating: HealthCheckRating) => {
-    let color = 'green';
+    let color = 'red';
 
-    if (rating < 3) {
-      color = "red";
-    } else if (rating === 3) {
-      color = "yellow";
+    if (rating === 0) {
+      color = "green";
+    } else if (rating < 2) {
+      color = "orange";
     }
     return <FavoriteIcon style={{ color}}  />;
   };
-
 
 
   return (
