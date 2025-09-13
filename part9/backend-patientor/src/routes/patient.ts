@@ -1,6 +1,6 @@
 import express, { Router, Response, Request } from 'express';
 import patientService from '../services/patientService';
-import { NewPatient, NonSensitivePatient, Patient } from '../types';
+import { NewEntry, NewPatient, NonSensitivePatient, Patient } from '../types';
 import { newPatientParser } from '../middleware/newPatientParser';
 import { errorMiddleware } from '../middleware/errorMiddleware';
 
@@ -27,6 +27,18 @@ router.get('/:id', (req, res) => {
   }
   
 }); 
+
+router.post('/:id/entries', (req: Request<{ id: string }, unknown, NewEntry>, res) => {
+
+  const id = req.params.id;
+  try {
+    const entry = patientService.createNewEntry(req.body, id);
+    res.send(entry);
+    
+  } catch {
+   res.status(404).send({error: "Patient not found"});
+  }
+});
 
 router.use(errorMiddleware);
 

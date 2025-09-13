@@ -28,7 +28,7 @@ export const BaseEntry  = z.object({
   diagnosisCodes: z.string().array().optional()
 });
 
-export const OccupationalHealthcareEntry = BaseEntry.extend({
+export const OccupationalHealthcareEntrySchema = BaseEntry.extend({
   type: z.literal("OccupationalHealthcare"),
   employerName: z.string(),
   sickLeave: z.object({
@@ -38,7 +38,7 @@ export const OccupationalHealthcareEntry = BaseEntry.extend({
 });
 
 
-export const HospitalEntry = BaseEntry.extend({
+export const HospitalEntrySchema = BaseEntry.extend({
   type: z.literal("Hospital"),
   discharge: z.object({
     date: z.iso.date(),
@@ -47,18 +47,23 @@ export const HospitalEntry = BaseEntry.extend({
 });
 
 
-export const HealthCheckEntry = BaseEntry.extend({
+export const HealthCheckEntrySchema = BaseEntry.extend({
   type: z.literal("HealthCheck"),
   healthCheckRating: z.enum(HealthCheckRating)
 });
 
 export const EntrySchema = z.discriminatedUnion("type", [
-  HospitalEntry,
-  OccupationalHealthcareEntry,
-  HealthCheckEntry
+  HospitalEntrySchema,
+  OccupationalHealthcareEntrySchema,
+  HealthCheckEntrySchema
 ]);
 
 export type Entry = z.infer<typeof EntrySchema>;
+
+type UnionOmit<T, K extends string | number | symbol> = T extends unknown ? Omit<T, K> : never;
+// Define Entry without the 'id' property
+export type NewEntry = UnionOmit<Entry, 'id'>;
+
 
 export const newPatientSchema = z.object({
   name: z.string(),
