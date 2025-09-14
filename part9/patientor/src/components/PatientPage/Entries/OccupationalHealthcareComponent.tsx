@@ -1,7 +1,7 @@
-import { Diagnosis, OccupationalHealthcareEntry } from "../../types";
+import { Diagnosis, OccupationalHealthcareEntry } from "../../../types";
 import { Box, Typography } from "@mui/material";
 import WorkIcon from '@mui/icons-material/Work';
-import { getDiagnosisDetails } from "./utils";
+import { getDiagnosisDetails } from "../utils";
 
 interface Props {
   entry: OccupationalHealthcareEntry,

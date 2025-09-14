@@ -15,7 +15,7 @@ const HospitalEntryForm = ({ sumbitNewEntry, allDiagnosisCodes }: Props) => {
   const [description, setDescription] = useState<string>('');
   const [date, setDate] = useState<string>('');
   const [specialist, setSpecialist] = useState<string>('');
-  const [diagnosticCodes, setDiagnosticCodes] = useState<string[]>();
+  const [diagnosticCodes, setDiagnosticCodes] = useState<string[]>([]);
   const [dischargeDate, setDischargeDate] = useState<string>('');
   const [dischargeCriteria, setDischargeCriteria] = useState<string>('');
 

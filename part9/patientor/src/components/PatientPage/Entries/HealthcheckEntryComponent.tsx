@@ -1,8 +1,8 @@
-import { Diagnosis, HealthCheckEntry, HealthCheckRating } from "../../types";
+import { Diagnosis, HealthCheckEntry, HealthCheckRating } from "../../../types";
 import { Box, Typography } from "@mui/material";
 import MonitorHeartIcon from '@mui/icons-material/MonitorHeart';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import { getDiagnosisDetails } from "./utils";
+import { getDiagnosisDetails } from "../utils";
 
 interface Props {
   entry: HealthCheckEntry,

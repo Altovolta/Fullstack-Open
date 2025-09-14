@@ -10,9 +10,9 @@ import { Diagnosis, Entry, NewEntryFormValues, Patient } from "../../types";
 import patientService from '../../services/patients';
 import diagnosisService from '../../services/diagnosis';
 
-import HospitalEntryComponent from "./HospitalEntryComponent";
-import OccupationalHealthcareComponent from "./OccupationalHealthcareComponent";
-import HealthCheckComponent from "./HealthcheckEntryComponent";
+import HospitalEntryComponent from "./Entries/HospitalEntryComponent";
+import OccupationalHealthcareComponent from "./Entries/OccupationalHealthcareComponent";
+import HealthCheckComponent from "./Entries/HealthcheckEntryComponent";
 import { assertNever } from "../../utils";
 
 import Notification from "../Notifications";

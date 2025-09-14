@@ -1,7 +1,7 @@
-import { Diagnosis, HospitalEntry } from "../../types";
+import { Diagnosis, HospitalEntry } from "../../../types";
 import { Box, Typography } from "@mui/material";
 import LocalHospitalIcon from '@mui/icons-material/LocalHospital';
-import { getDiagnosisDetails } from "./utils";
+import { getDiagnosisDetails } from "../utils";
 
 interface Props {
   entry: HospitalEntry,
