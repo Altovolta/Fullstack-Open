@@ -1,7 +1,6 @@
 [submodule "part3/phonebook-backend"]
 	path = part3/phonebook-backend
 	url = https://github.com/Altovolta/phonebook-backend
-
 [submodule "part10/rate-repository-app"]
-	path = part10//rate-repository-app
+	path = part10/rate-repository-app
 	url = https://github.com/Altovolta/rate-repository-app
