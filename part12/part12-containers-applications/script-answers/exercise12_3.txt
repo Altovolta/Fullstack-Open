@@ -1,0 +1,10 @@
+Script started on 2025-10-03 17:18:42-03:00 [TERM="xterm-256color" TTY="/dev/pts/4" COLUMNS="98" LINES="46"]
+OAOAOAOAOA
+[200~apt-get update[201~
+[200~apt-get -y install nano[201~
+[200~nano /usr/src/app/index.js[201~
+
+y
+exit
+exit
+Script done on 2025-10-03 17:19:28-03:00 [COMMAND_EXIT_CODE="0"]
