@@ -1,0 +1,13 @@
+Script started on 2025-10-03 17:01:42-03:00 [TERM="xterm-256color" TTY="/dev/pts/4" COLUMNS="98" LINES="46"]
+sudo [200~docker container run -it ubuntu bash[201~
+ls
+cd usr/
+ls
+cd src
+mkdir app
+cd app
+touch index.js
+ls
+exit
+exit
+Script done on 2025-10-03 17:02:52-03:00 [COMMAND_EXIT_CODE="0"]
