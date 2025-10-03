@@ -1,0 +1,10 @@
+Script started on 2025-10-03 17:20:33-03:00 [TERM="xterm-256color" TTY="/dev/pts/4" COLUMNS="98" LINES="46"]
+[AOAOAOAOAOAOA
+
+[200~apt install -y curl
+[200~curl -sL https://deb.nodesource.com/setup_20.x | bash
+apt install -y nodejs[201~
+[200~node /usr/src/app/index.js[201~
+exit
+exit
+Script done on 2025-10-03 17:22:11-03:00 [COMMAND_EXIT_CODE="0"]
