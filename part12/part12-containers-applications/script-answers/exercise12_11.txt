@@ -1,0 +1,8 @@
+sudo docker exec -it todo-backend-redis-1 redis-cli
+KEYS *                  // 1) "added_todos"
+GET "added_todos"       // "2"
+SET "added_todos" 9001  // OK
+
+// postman request with new todo 
+GET "added_todos"       // "9002"
+DEL "added_todos"  // (integer) 1
