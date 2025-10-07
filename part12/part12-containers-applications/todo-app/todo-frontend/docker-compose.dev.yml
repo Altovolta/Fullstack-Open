@@ -1,0 +1,11 @@
+services:
+  frontend-app:
+    container_name: front-dev
+    image: todo-frontend
+    build:
+      context: . 
+      dockerfile: dev.Dockerfile
+    volumes:
+      - ./:/usr/src/app
+    ports:
+      - 5173:5173
