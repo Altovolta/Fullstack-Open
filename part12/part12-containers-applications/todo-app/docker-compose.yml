@@ -1,22 +1,21 @@
 services:
   frontend-app:
-    container_name: front-dev
-    image: todo-frontend-dev
+    image: todo-frontend
     build:
       context: ./todo-frontend     
-      dockerfile: dev.Dockerfile
+      dockerfile: Dockerfile
+      args:
+        - VITE_BACKEND_URL=/api
     depends_on:      
       - express-app
-    environment:
-      - VITE_BACKEND_URL=/api
     volumes:
       - ./todo-frontend:/usr/src/app
 
   express-app:
-    image: todo-backend-dev
+    image: todo-backend
     build:
       context: ./todo-backend
-      dockerfile: dev.Dockerfile
+      dockerfile: Dockerfile
     depends_on:
      - mongo-db
      - redis-db
@@ -30,10 +29,10 @@ services:
     image: nginx:1.20.1
     container_name: reverse-proxy
     depends_on:      
-    - frontend-app
-    - express-app
+    # - frontend-app
+      - express-app
     volumes:
-      - ./nginx.dev.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
     ports:
       - 8080:80
 
@@ -49,6 +48,9 @@ services:
     volumes: 
       - ./todo-backend/mongo/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js
       - mongo_data:/data/db
+    command: mongod --quiet --logpath /dev/null
+    logging:
+      driver: "none"
 
   redis-db:
     image: redis
