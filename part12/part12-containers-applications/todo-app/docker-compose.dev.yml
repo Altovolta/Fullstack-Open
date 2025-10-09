@@ -8,11 +8,20 @@ services:
     volumes:
       - ./todo-frontend:/usr/src/app
   
+  express-app:
+    image: todo-backend-dev
+    build:
+      context: ./todo-backend
+      dockerfile: dev.Dockerfile
+    volumes:
+      - ./todo-backend:/usr/src/app
+
   nginx:
     image: nginx:1.20.1
     container_name: reverse-proxy
     depends_on:      
     - frontend-app
+    - express-app
     volumes:
       - ./nginx.dev.conf:/etc/nginx/nginx.conf:ro
     ports:
