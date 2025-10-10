@@ -26,10 +26,18 @@ const authLink = new SetContextLink((_, { headers }) => {
   }
 })
 
-const httpLink = new HttpLink({ uri: 'http://localhost:4000' })
+const BACKEND_HOST = import.meta.env.VITE_BACKEND_HOST
+
+const BACKEND_URI = BACKEND_HOST || 'http://localhost:4000'
+
+const WS_BACKEND_URL = BACKEND_HOST 
+  ? 'ws://' + window.location.host + BACKEND_HOST 
+  : 'http://localhost:4000'
+
+const httpLink = new HttpLink({ uri: BACKEND_URI})
 
 const wsLink = new GraphQLWsLink(
-  createClient({ url: 'ws://localhost:4000' })
+  createClient({ url: WS_BACKEND_URL})
 )
 
 const splitLink = ApolloLink.split(

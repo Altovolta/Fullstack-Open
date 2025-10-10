@@ -1,0 +1,35 @@
+services:
+  frontend-app:
+    image: library-frontend-dev
+    build:
+      context: ./library-frontend    
+      dockerfile: dev.Dockerfile
+    depends_on:      
+      - express-app
+    environment:
+      - VITE_BACKEND_HOST=/api/
+    volumes:
+      - ./library-frontend:/usr/src/app
+      - ./library-frontend/node_modules:/usr/src/app/node_modules
+
+  express-app:
+    image: library-backend-dev
+    build:
+      context: ./backend-graphql
+      dockerfile: dev.Dockerfile
+    env_file:
+      - ./backend-graphql/.env
+    volumes:
+      - ./backend-graphql:/usr/src/app
+      - ./backend-graphql/node_modules:/usr/src/app/node_modules
+
+  nginx:
+    image: nginx:1.20.1
+    container_name: reverse-proxy
+    depends_on:      
+    - frontend-app
+    - express-app
+    volumes:
+      - ./nginx.dev.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - 8080:80
