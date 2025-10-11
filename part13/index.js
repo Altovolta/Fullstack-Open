@@ -20,6 +20,18 @@ app.post('/api/blogs', async (req, res) => {
   }
 })
 
+app.delete('/api/blogs/:id', async (req, res) => {
+  console.log(req.params.id)
+  try {
+    const deleted = await Blog.destroy({ where: { id: req.params.id } })
+    if (deleted === 0) {
+      return res.sendStatus(404)
+    }
+    return res.sendStatus(204)
+  } catch (error) {
+    res.status(400).send({error})
+  }
+})
 
 const PORT = process.env.PORT || 3000
 app.listen(PORT, () => {
